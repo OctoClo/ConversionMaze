@@ -7,7 +7,7 @@ namespace ConversionFPS
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        Main main;
 
         public Game1()
         {
@@ -17,13 +17,12 @@ namespace ConversionFPS
         
         protected override void Initialize()
         {
+            main = new Main(this, graphics);
             base.Initialize();
         }
         
         protected override void LoadContent()
-        {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-        }
+        { }
         
         protected override void UnloadContent()
         { }
@@ -33,13 +32,15 @@ namespace ConversionFPS
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            main.Update(gameTime);
+
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            main.Draw();
             base.Draw(gameTime);
         }
     }
