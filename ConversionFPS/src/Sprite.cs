@@ -5,28 +5,65 @@ namespace ConversionFPS
 {
     public class Sprite
     {
-        public Texture2D Texture;
-        public Vector2 Position;
-        
         public Rectangle Hitbox
         {
-            get { return new Rectangle((int)Position.X, (int)Position.Y, Texture.Width, Texture.Height); }
+            get
+            {
+                if (Position != null)
+                {
+                    Vector2 position = (Vector2)Position;
+                    return new Rectangle((int)position.X, (int)position.Y, Texture.Width, Texture.Height);
+                }
+                else
+                    return new Rectangle();
+            }
         }
 
-        public Sprite(Texture2D texture, Vector2 position)
+        public int Width
         {
-            Texture = texture;
+            get { return Texture.Width; }
+        }
+
+        public int Height
+        {
+            get { return Texture.Height; }
+        }
+
+        Texture2D Texture;
+        Vector2? Position;
+
+        public Sprite(string textureName, Vector2? position = null)
+        {
+            Texture = Main.Instance.Content.Load<Texture2D>(textureName); ;
             Position = position;
         }
 
-        public virtual void Update(float time)
+        public virtual void Update(GameTime gameTime)
         {
 
         }
 
-        public virtual void Draw(SpriteBatch batch)
+        public virtual void Draw()
         {
-            batch.Draw(Texture, Position, Color.White);
+            Main.Batch.Draw(Texture, (Vector2)Position, Color.White);
+        }
+
+        public virtual void Draw(Rectangle destRect)
+        {
+            if (Position != null)
+                Main.Batch.Draw(Texture, (Vector2)Position, destRect, Color.White);
+            else
+                Main.Batch.Draw(Texture, destRect, Color.White);
+        }
+
+        public virtual void Draw(Rectangle destRect, Rectangle sourceRect)
+        {
+            Main.Batch.Draw(Texture, destRect, sourceRect, Color.White);
+        }
+
+        public virtual void Draw(Rectangle destRect, Rectangle? sourceRect, float rotation, Vector2 origin)
+        {
+            Main.Batch.Draw(Texture, destRect, sourceRect, Color.White, rotation, origin, SpriteEffects.None, 0f);
         }
     }
 }
