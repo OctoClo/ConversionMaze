@@ -81,23 +81,23 @@ namespace ConversionFPS
 
             if (Input.KeyPressed(Keys.Z, false))
             {
-                PlayerPosition.X += speed * (float)Math.Sin((double)MathHelper.ToRadians(Rotation));
-                PlayerPosition.Y -= speed * (float)Math.Cos((double)MathHelper.ToRadians(Rotation));
+                PlayerPosition.X += speed * (float)Math.Sin(MathHelper.ToRadians(Rotation));
+                PlayerPosition.Y -= speed * (float)Math.Cos(MathHelper.ToRadians(Rotation));
             }
             if (Input.KeyPressed(Keys.S, false))
             {
-                PlayerPosition.X += speed * (float)Math.Sin((double)MathHelper.ToRadians(Rotation + 180));
-                PlayerPosition.Y -= speed * (float)Math.Cos((double)MathHelper.ToRadians(Rotation + 180));
+                PlayerPosition.X += speed * (float)Math.Sin(MathHelper.ToRadians(Rotation + 180));
+                PlayerPosition.Y -= speed * (float)Math.Cos(MathHelper.ToRadians(Rotation + 180));
             }
             if (Input.KeyPressed(Keys.Q, false))
             {
-                PlayerPosition.X += speed * (float)Math.Sin((double)MathHelper.ToRadians(Rotation - 90));
-                PlayerPosition.Y -= speed * (float)Math.Cos((double)MathHelper.ToRadians(Rotation - 90));
+                PlayerPosition.X += speed * (float)Math.Sin(MathHelper.ToRadians(Rotation - 90));
+                PlayerPosition.Y -= speed * (float)Math.Cos(MathHelper.ToRadians(Rotation - 90));
             }
             if (Input.KeyPressed(Keys.D, false))
             {
-                PlayerPosition.X += speed * (float)Math.Sin((double)MathHelper.ToRadians(Rotation + 90));
-                PlayerPosition.Y -= speed * (float)Math.Cos((double)MathHelper.ToRadians(Rotation + 90));
+                PlayerPosition.X += speed * (float)Math.Sin(MathHelper.ToRadians(Rotation + 90));
+                PlayerPosition.Y -= speed * (float)Math.Cos(MathHelper.ToRadians(Rotation + 90));
             }
 
             PlayerPosition.X = MathHelper.Clamp(PlayerPosition.X, 0f, 780f);
