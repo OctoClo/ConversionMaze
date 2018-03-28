@@ -6,3 +6,4 @@ Properties/
 *.manifest
 *.csproj
 *.sln
+*.csproj.user
