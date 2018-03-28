@@ -27,6 +27,9 @@ namespace ConversionFPS
         float speed, rotationSpeed;
         HUD hud;
 
+        Enemy enemy1, enemy2;
+        Door door;
+
         public Main(Game1 game, GraphicsDeviceManager graphics)
         {
             Instance = game;
@@ -48,6 +51,10 @@ namespace ConversionFPS
             speed = 2f;
             rotationSpeed = 3f;
             hud = new HUD();
+
+            enemy1 = new Enemy(new Vector3(100, 100, 0));
+            enemy2 = new Enemy(new Vector3(100, 200, 0));
+            door = new Door(new Vector3(100, 300, 0));
         }
 
         public void Initialize()
@@ -109,6 +116,9 @@ namespace ConversionFPS
             Device.Clear(Color.Black);
             Batch.Begin();
             hud.Draw();
+            enemy1.Draw();
+            enemy2.Draw();
+            door.Draw();
             Batch.End();
         }
     }
