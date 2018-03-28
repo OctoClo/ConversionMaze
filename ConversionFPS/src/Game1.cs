@@ -18,6 +18,7 @@ namespace ConversionFPS
         protected override void Initialize()
         {
             main = new Main(this, graphics);
+            main.Initialize();
             base.Initialize();
         }
         
