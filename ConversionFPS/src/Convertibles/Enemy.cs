@@ -20,12 +20,20 @@ namespace ConversionFPS
 
         void Initialize()
         {
-            if (NbKills == 0)
-                level = 1;
-            else if (NbKills >= 1 && NbKills <= 3)
-                level = 2;
+            if (Main.LevelNumber == 1)
+            {
+                if (NbKills == 0)
+                    level = 1;
+                else if (NbKills >= 3)
+                    level = 2;
+            }
             else
-                level = 3;
+            {
+                if (NbKills == 0)
+                    level = 2;
+                else if (NbKills >= 3)
+                    level = 3;
+            }
 
             speed = level;
             damages = level * 5;
@@ -35,7 +43,7 @@ namespace ConversionFPS
 
         protected override void GenerateConversion()
         {
-            int start = Main.Rand.Next((int)Base.Hexadecimal);
+            int start = Main.Rand.Next(2, (int)Base.Hexadecimal);
 
             if (level == 1)
             {

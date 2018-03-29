@@ -19,7 +19,7 @@ namespace ConversionFPS
 
         protected override void GenerateConversion()
         {
-            int start = Main.Rand.Next((int)Base.Hexadecimal);
+            int start = Main.Rand.Next(2, (int)Base.Hexadecimal);
 
             startBase = Base.Binary;
             endBase = Base.Hexadecimal;
