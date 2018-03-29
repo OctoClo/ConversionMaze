@@ -5,7 +5,7 @@ using System;
 
 namespace ConversionFPS
 {
-    enum GameState { Playing, Win, GameOver };
+    enum GameState { Level1, Level2, Win, GameOver };
 
     class Main
     {
@@ -46,7 +46,7 @@ namespace ConversionFPS
             PlayerPosition = Vector3.Zero;
             Rotation = 0;
 
-            GameState = GameState.Playing;
+            GameState = GameState.Level1;
 
             speed = 2f;
             rotationSpeed = 3f;
@@ -70,55 +70,64 @@ namespace ConversionFPS
 
         public void Update(GameTime gameTime)
         {
-            if (GameState != GameState.Playing)
-                Instance.Exit();
-
-            Input.Update();
-            hud.Update(gameTime);
-
-            //Lock or unlock mouse movement
-            if (Instance.IsActive)
+            if (GameState != GameState.GameOver && GameState != GameState.Win)
             {
-                if (Input.MousePos.X != center.X)
-                    Rotation += (Input.MousePos.X - center.X) / rotationSpeed;
+                Input.Update();
+                hud.Update(gameTime);
 
-                Mouse.SetPosition((int)center.X, (int)center.Y);
-                Instance.IsMouseVisible = false;
-            }
+                // Lock mouse position at center of screen
+                if (Instance.IsActive)
+                {
+                    if (Input.MousePos.X != center.X)
+                        Rotation += (Input.MousePos.X - center.X) / rotationSpeed;
 
-            if (Input.KeyPressed(Keys.Z, false))
-            {
-                PlayerPosition.X += speed * (float)Math.Sin(MathHelper.ToRadians(Rotation));
-                PlayerPosition.Y -= speed * (float)Math.Cos(MathHelper.ToRadians(Rotation));
-            }
-            if (Input.KeyPressed(Keys.S, false))
-            {
-                PlayerPosition.X += speed * (float)Math.Sin(MathHelper.ToRadians(Rotation + 180));
-                PlayerPosition.Y -= speed * (float)Math.Cos(MathHelper.ToRadians(Rotation + 180));
-            }
-            if (Input.KeyPressed(Keys.Q, false))
-            {
-                PlayerPosition.X += speed * (float)Math.Sin(MathHelper.ToRadians(Rotation - 90));
-                PlayerPosition.Y -= speed * (float)Math.Cos(MathHelper.ToRadians(Rotation - 90));
-            }
-            if (Input.KeyPressed(Keys.D, false))
-            {
-                PlayerPosition.X += speed * (float)Math.Sin(MathHelper.ToRadians(Rotation + 90));
-                PlayerPosition.Y -= speed * (float)Math.Cos(MathHelper.ToRadians(Rotation + 90));
-            }
+                    Mouse.SetPosition((int)center.X, (int)center.Y);
+                    Instance.IsMouseVisible = false;
+                }
 
-            PlayerPosition.X = MathHelper.Clamp(PlayerPosition.X, 0f, 780f);
-            PlayerPosition.Y = MathHelper.Clamp(PlayerPosition.Y, 0f, 580f);
+                if (Input.KeyPressed(Keys.Z, false))
+                {
+                    PlayerPosition.X += speed * (float)Math.Sin(MathHelper.ToRadians(Rotation));
+                    PlayerPosition.Y -= speed * (float)Math.Cos(MathHelper.ToRadians(Rotation));
+                }
+                if (Input.KeyPressed(Keys.S, false))
+                {
+                    PlayerPosition.X += speed * (float)Math.Sin(MathHelper.ToRadians(Rotation + 180));
+                    PlayerPosition.Y -= speed * (float)Math.Cos(MathHelper.ToRadians(Rotation + 180));
+                }
+                if (Input.KeyPressed(Keys.Q, false))
+                {
+                    PlayerPosition.X += speed * (float)Math.Sin(MathHelper.ToRadians(Rotation - 90));
+                    PlayerPosition.Y -= speed * (float)Math.Cos(MathHelper.ToRadians(Rotation - 90));
+                }
+                if (Input.KeyPressed(Keys.D, false))
+                {
+                    PlayerPosition.X += speed * (float)Math.Sin(MathHelper.ToRadians(Rotation + 90));
+                    PlayerPosition.Y -= speed * (float)Math.Cos(MathHelper.ToRadians(Rotation + 90));
+                }
+
+                PlayerPosition.X = MathHelper.Clamp(PlayerPosition.X, 0f, 780f);
+                PlayerPosition.Y = MathHelper.Clamp(PlayerPosition.Y, 0f, 580f);
+            }
         }
 
         public void Draw()
         {
             Device.Clear(Color.Black);
             Batch.Begin();
-            hud.Draw();
-            enemy1.Draw();
-            enemy2.Draw();
-            door.Draw();
+
+            if (GameState == GameState.GameOver)
+                Batch.DrawString(HUD.Font, "YOU LOSE.", center - (HUD.Font.MeasureString("YOU LOSE") / 2), Color.DarkRed);
+            else if (GameState == GameState.Win)
+                Batch.DrawString(HUD.Font, "YOU WIN !", center - (HUD.Font.MeasureString("YOU WIN !") / 2), Color.White);
+            else
+            {
+                hud.Draw();
+                enemy1.Draw();
+                enemy2.Draw();
+                door.Draw();
+            }
+            
             Batch.End();
         }
     }
