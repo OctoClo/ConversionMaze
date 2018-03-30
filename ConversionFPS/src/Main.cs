@@ -16,18 +16,18 @@ namespace ConversionFPS
         public static Random Rand;
 
         public static int Height, Width;
-
-        public static int LevelNumber;
-        public static Vector3 PlayerPosition;
-        public static float Rotation;
+        public static Vector2 Center;
 
         public static GameState GameState;
 
-        public static Vector2 Center;
+        public static int LevelNumber;
+        public static Vector2 PlayerPosition;
+        public static float Rotation;
+
         float speed, rotationSpeed;
+
         HUD hud;
         ConversionManager conversionManager;
-
         Enemy enemy1, enemy2;
         Door door;
 
@@ -43,17 +43,17 @@ namespace ConversionFPS
             Width = 1280;
             Center = new Vector2(Width / 2, Height / 2);
 
-            LevelNumber = 1;
-            PlayerPosition = Vector3.Zero;
-            Rotation = 0;
-
             GameState = GameState.Level1;
 
-            speed = 2f;
-            rotationSpeed = 3f;
+            LevelNumber = 1;
+            PlayerPosition = Vector2.Zero;
+            Rotation = 0;
+
+            speed = 0.1f;
+            rotationSpeed = 0.05f;
+
             hud = new HUD();
             conversionManager = new ConversionManager();
-
             enemy1 = new Enemy(new Vector3(100, 100, 0));
             enemy2 = new Enemy(new Vector3(100, 200, 0));
             door = new Door(new Vector3(100, 300, 0));
@@ -94,7 +94,7 @@ namespace ConversionFPS
                     if (Instance.IsActive)
                     {
                         if (Input.MousePos.X != Center.X)
-                            Rotation += (Input.MousePos.X - Center.X) / rotationSpeed;
+                            Rotation += (Input.MousePos.X - Center.X) * gameTime.ElapsedGameTime.Milliseconds * rotationSpeed;
 
                         Mouse.SetPosition((int)Center.X, (int)Center.Y);
                         Instance.IsMouseVisible = false;
@@ -102,27 +102,26 @@ namespace ConversionFPS
 
                     if (Input.KeyPressed(Keys.Z, false))
                     {
-                        PlayerPosition.X += speed * (float)Math.Sin(MathHelper.ToRadians(Rotation));
-                        PlayerPosition.Y -= speed * (float)Math.Cos(MathHelper.ToRadians(Rotation));
+                        PlayerPosition.X += (float)Math.Sin(MathHelper.ToRadians(Rotation)) * gameTime.ElapsedGameTime.Milliseconds * speed;
+                        PlayerPosition.Y -= (float)Math.Cos(MathHelper.ToRadians(Rotation)) * gameTime.ElapsedGameTime.Milliseconds * speed;
                     }
                     if (Input.KeyPressed(Keys.S, false))
                     {
-                        PlayerPosition.X += speed * (float)Math.Sin(MathHelper.ToRadians(Rotation + 180));
-                        PlayerPosition.Y -= speed * (float)Math.Cos(MathHelper.ToRadians(Rotation + 180));
+                        PlayerPosition.X += (float)Math.Sin(MathHelper.ToRadians(Rotation + 180)) * gameTime.ElapsedGameTime.Milliseconds * speed;
+                        PlayerPosition.Y -= (float)Math.Cos(MathHelper.ToRadians(Rotation + 180)) * gameTime.ElapsedGameTime.Milliseconds * speed;
                     }
                     if (Input.KeyPressed(Keys.Q, false))
                     {
-                        PlayerPosition.X += speed * (float)Math.Sin(MathHelper.ToRadians(Rotation - 90));
-                        PlayerPosition.Y -= speed * (float)Math.Cos(MathHelper.ToRadians(Rotation - 90));
+                        PlayerPosition.X += (float)Math.Sin(MathHelper.ToRadians(Rotation - 90)) * gameTime.ElapsedGameTime.Milliseconds * speed;
+                        PlayerPosition.Y -= (float)Math.Cos(MathHelper.ToRadians(Rotation - 90)) * gameTime.ElapsedGameTime.Milliseconds * speed;
                     }
                     if (Input.KeyPressed(Keys.D, false))
                     {
-                        PlayerPosition.X += speed * (float)Math.Sin(MathHelper.ToRadians(Rotation + 90));
-                        PlayerPosition.Y -= speed * (float)Math.Cos(MathHelper.ToRadians(Rotation + 90));
+                        PlayerPosition.X += (float)Math.Sin(MathHelper.ToRadians(Rotation + 90)) * gameTime.ElapsedGameTime.Milliseconds * speed;
+                        PlayerPosition.Y -= (float)Math.Cos(MathHelper.ToRadians(Rotation + 90)) * gameTime.ElapsedGameTime.Milliseconds * speed;
                     }
 
-                    PlayerPosition.X = MathHelper.Clamp(PlayerPosition.X, 0f, 780f);
-                    PlayerPosition.Y = MathHelper.Clamp(PlayerPosition.Y, 0f, 580f);
+                    PlayerPosition = new Vector2(MathHelper.Clamp(PlayerPosition.X, 0f, 780f), MathHelper.Clamp(PlayerPosition.Y, 0f, 580f));
                 }
                 else
                     conversionManager.Update(gameTime);
