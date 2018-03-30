@@ -33,7 +33,7 @@ namespace ConversionFPS
         {
             timeF -= (gameTime.ElapsedGameTime.Milliseconds / 1000f) / slowDown;
             if (timeF < 0)
-                Main.GameState = GameState.GameOver;
+                EventManager.Instance.Raise(new OnGameOverEvent());
 
             time = MathHelper.Clamp((int)(Math.Round(timeF) + .5f), 0, 999);
             minutes = time / 60;

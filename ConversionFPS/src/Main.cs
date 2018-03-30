@@ -7,6 +7,8 @@ namespace ConversionFPS
 {
     enum GameState { Level1, Level2, Win, GameOver };
 
+    class OnGameOverEvent : GameEvent { }
+
     class Main
     {
         public static Game1 Instance;
@@ -64,6 +66,11 @@ namespace ConversionFPS
             camera = new Camera(new Vector3(0.5f, 0.5f, 0.5f), 0, Device.Viewport.AspectRatio, 0.05f, 100f);
             effect = new BasicEffect(Device);
             maze = new Maze();
+
+            SoundManager.AddEffect("Win", "YouWin");
+            SoundManager.AddEffect("GameOver", "YouLose");
+
+            EventManager.Instance.AddListener<OnGameOverEvent>(HandleGameOverEvent);
         }
 
         public void Initialize()
@@ -79,9 +86,15 @@ namespace ConversionFPS
 
         public void Update(GameTime gameTime)
         {
-            if (GameState != GameState.GameOver && GameState != GameState.Win)
+            Input.Update();
+
+            if (GameState == GameState.GameOver || GameState == GameState.Win)
             {
-                Input.Update();
+                if (Input.KeyPressed(Keys.Escape, true))
+                    Instance.Exit();
+            }
+            else
+            {
                 hud.Update(gameTime);
 
                 if (Input.KeyPressed(Keys.E, true) && !Convertible.IsConversionOn)
@@ -156,6 +169,12 @@ namespace ConversionFPS
             }
             
             Batch.End();
+        }
+
+        void HandleGameOverEvent(OnGameOverEvent e)
+        {
+            GameState = GameState.GameOver;
+            SoundManager.Play("GameOver");
         }
     }
 }

@@ -87,3 +87,27 @@
 /processorParam:TextureFormat=Color
 /build:HUD/PlayerCursor.png
 
+#begin Conversion/Correct.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Conversion/Correct.wav
+
+#begin Conversion/Wrong.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Conversion/Wrong.wav
+
+#begin YouLose.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:YouLose.wav
+
+#begin YouWin.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:YouWin.wav
+
