@@ -43,7 +43,7 @@ namespace ConversionFPS
 
         protected override void GenerateConversion()
         {
-            int start = Main.Rand.Next(2, (int)Base.Hexadecimal);
+            int start = Main.Rand.Next(16, 256);
 
             if (level == 1)
             {
