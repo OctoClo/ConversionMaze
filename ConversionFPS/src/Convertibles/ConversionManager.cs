@@ -45,7 +45,7 @@ namespace ConversionFPS
                     
                     if (Input.KeyPressed(key, true))
                     {
-                        if (key >= Keys.A && key <= Keys.E)
+                        if (key >= Keys.A && key <= Keys.F)
                             number += keys[0].ToString();
                         else if ((key >= Keys.NumPad0 && key <= Keys.NumPad9) || (key >= Keys.D0 && key <= Keys.D9))
                             number += GetNumberFromKey(key);
