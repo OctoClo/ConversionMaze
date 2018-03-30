@@ -38,6 +38,12 @@ namespace ConversionFPS
             this.position = position;
         }
 
+        public Sprite(Texture2D texture, Vector2? position = null)
+        {
+            this.texture = texture;
+            this.position = position;
+        }
+
         public virtual void Update(GameTime gameTime)
         {
 
