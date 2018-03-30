@@ -30,6 +30,9 @@ namespace ConversionFPS
         ConversionManager conversionManager;
         Enemy enemy1, enemy2;
         Door door;
+        Camera camera;
+        Maze maze;
+        BasicEffect effect;
 
         public Main(Game1 game, GraphicsDeviceManager graphics)
         {
@@ -57,6 +60,10 @@ namespace ConversionFPS
             enemy1 = new Enemy(new Vector3(100, 100, 0));
             enemy2 = new Enemy(new Vector3(100, 200, 0));
             door = new Door(new Vector3(100, 300, 0));
+
+            camera = new Camera(new Vector3(0.5f, 0.5f, 0.5f), 0, Device.Viewport.AspectRatio, 0.05f, 100f);
+            effect = new BasicEffect(Device);
+            maze = new Maze();
         }
 
         public void Initialize()
@@ -139,12 +146,13 @@ namespace ConversionFPS
                 Batch.DrawString(HUD.Font, "YOU WIN !", Center - (HUD.Font.MeasureString("YOU WIN !") / 2), Color.White);
             else
             {
-                hud.Draw();
+                maze.Draw(camera, effect);
                 enemy1.Draw();
-                if (Convertible.IsConversionOn)
-                    conversionManager.Draw();
                 //enemy2.Draw();
                 //door.Draw();
+                hud.Draw();
+                if (Convertible.IsConversionOn)
+                    conversionManager.Draw();
             }
             
             Batch.End();
