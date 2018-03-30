@@ -29,7 +29,7 @@ namespace ConversionFPS
             position = new Vector2(820, 50);
 
             spriteContainer = new Sprite("HUD/MinimapContainer");
-            spriteMinimap = new Sprite("HUD/MinimapTest");
+            spriteMinimap = new Sprite(Main.map1.getTexture());
             spriteCursor = new Sprite("HUD/PlayerCursor");
 
             containerZone = new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
@@ -49,9 +49,12 @@ namespace ConversionFPS
 
         void UpdateMinimapDisplayPart()
         {
-            minimapDisplayPart = new Rectangle((int)(Main.PlayerPosition.X - (spriteMinimap.Width / 4)),
-                                            (int)(Main.PlayerPosition.Y - (spriteMinimap.Height / 4)),
-                                            spriteMinimap.Width / 2, spriteMinimap.Height / 2);
+            Vector2 location = new Vector2();
+            Vector2 size = new Vector2(spriteMinimap.Width / 2f - 20, minimapDisplayZone.Height * spriteMinimap.Height / ( minimapDisplayZone.Width * 2f));
+            location.X = -(size.X / 2 - 10) + Main.PlayerPosition.X * ((size.X * 2f + 20f) / (Main.MaxPlayerPosition.X));
+            location.Y = -(size.Y / 2 - 10) + Main.PlayerPosition.Y * ((size.X * 2f + 20f) / (Main.MaxPlayerPosition.Y));
+
+            minimapDisplayPart = new Rectangle((int)location.X, (int)location.Y, (int)size.X, (int)size.Y);
         }
 
         public void Draw()
