@@ -23,6 +23,11 @@ namespace ConversionFPS
             MousePos = new Vector2(currentMouseState.X, currentMouseState.Y);
         }
 
+        public static Keys[] KeysPressed()
+        {
+            return currentKeyboardState.GetPressedKeys();
+        }
+
         public static bool KeyPressed(Keys k, bool firstPress)
         {
             return firstPress ? (oldKeyboardState[k] == KeyState.Up && currentKeyboardState[k] == KeyState.Down) : (currentKeyboardState[k] == KeyState.Down);

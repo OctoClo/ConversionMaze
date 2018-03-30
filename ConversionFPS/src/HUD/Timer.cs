@@ -17,16 +17,21 @@ namespace ConversionFPS
 
         Vector2 timePosition, levelPosition;
 
+        int slowDown;
+
         public Timer()
         {
             timeF = 180f;
+            slowDown = 1;
             timePosition = new Vector2((Main.Width / 2) - (HUD.Font.MeasureString("2:22").X / 2), 50);
             levelPosition = new Vector2((Main.Width / 2) - (HUD.FontTiny.MeasureString("level 2").X / 2), 15);
+            EventManager.Instance.AddListener<OnConversionStartEvent>(HandleConversionStartEvent);
+            EventManager.Instance.AddListener<OnConversionStopEvent>(HandleConversionStopEvent);
         }
 
         public void Update(GameTime gameTime)
         {
-            timeF -= gameTime.ElapsedGameTime.Milliseconds / 1000f;
+            timeF -= (gameTime.ElapsedGameTime.Milliseconds / 1000f) / slowDown;
             if (timeF < 0)
                 Main.GameState = GameState.GameOver;
 
@@ -49,6 +54,16 @@ namespace ConversionFPS
                 Main.Batch.DrawString(HUD.Font, timer, timePosition, Color.White);
             else
                 Main.Batch.DrawString(HUD.Font, timer, timePosition, Color.DarkRed);
+        }
+
+        protected void HandleConversionStartEvent(OnConversionStartEvent e)
+        {
+            slowDown = 2;
+        }
+
+        protected void HandleConversionStopEvent(OnConversionStopEvent e)
+        {
+            slowDown = 1;
         }
     }
 }
