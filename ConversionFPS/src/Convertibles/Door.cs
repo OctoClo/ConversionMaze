@@ -31,6 +31,8 @@ namespace ConversionFPS
         protected override void HandleSuccess()
         {
             Open();
+            EventManager.Instance.RemoveListener<OnConversionStartEvent>(HandleConversionStartEvent);
+            EventManager.Instance.RemoveListener<OnConversionStopEvent>(HandleConversionStopEvent);
         }
 
         void Open()
