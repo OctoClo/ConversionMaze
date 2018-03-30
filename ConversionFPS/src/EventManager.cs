@@ -37,26 +37,37 @@ namespace ConversionFPS
 
             // Create a new non-generic delegate which calls our generic one.
             // This is the delegate we actually invoke.
-            void internalDelegate(GameEvent e) => del((T)e);
+            EventDelegate internalDelegate = (e) => del((T)e);
             delegateLookup[del] = internalDelegate;
 
-            if (delegates.TryGetValue(typeof(T), out EventDelegate tempDel))
+            EventDelegate tempDel;
+            if (delegates.TryGetValue(typeof(T), out tempDel))
+            {
                 delegates[typeof(T)] = tempDel += internalDelegate;
+            }
             else
+            {
                 delegates[typeof(T)] = internalDelegate;
+            }
         }
 
         public void RemoveListener<T>(EventDelegate<T> del) where T : GameEvent
         {
-            if (delegateLookup.TryGetValue(del, out EventDelegate internalDelegate))
+            EventDelegate internalDelegate;
+            if (delegateLookup.TryGetValue(del, out internalDelegate))
             {
-                if (delegates.TryGetValue(typeof(T), out EventDelegate tempDel))
+                EventDelegate tempDel;
+                if (delegates.TryGetValue(typeof(T), out tempDel))
                 {
                     tempDel -= internalDelegate;
                     if (tempDel == null)
+                    {
                         delegates.Remove(typeof(T));
+                    }
                     else
+                    {
                         delegates[typeof(T)] = tempDel;
+                    }
                 }
 
                 delegateLookup.Remove(del);
@@ -65,8 +76,11 @@ namespace ConversionFPS
 
         public void Raise(GameEvent e)
         {
-            if (delegates.TryGetValue(e.GetType(), out EventDelegate del))
+            EventDelegate del;
+            if (delegates.TryGetValue(e.GetType(), out del))
+            {
                 del.Invoke(e);
+            }
         }
     }
 }
