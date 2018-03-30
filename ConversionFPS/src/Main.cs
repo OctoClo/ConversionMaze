@@ -19,6 +19,7 @@ namespace ConversionFPS
 
         public static int LevelNumber;
         public static Vector3 PlayerPosition;
+        public static Vector2 MaxPlayerPosition;
         public static float Rotation;
 
         public static GameState GameState;
@@ -30,6 +31,8 @@ namespace ConversionFPS
 
         Enemy enemy1, enemy2;
         Door door;
+
+        public static Map map1;
 
         public Main(Game1 game, GraphicsDeviceManager graphics)
         {
@@ -45,9 +48,12 @@ namespace ConversionFPS
 
             LevelNumber = 1;
             PlayerPosition = Vector3.Zero;
+            MaxPlayerPosition = new Vector2(250f, 250f);
             Rotation = 0;
 
             GameState = GameState.Level1;
+            
+            map1 = new Map(1);
 
             speed = 2f;
             rotationSpeed = 3f;
@@ -57,6 +63,7 @@ namespace ConversionFPS
             enemy1 = new Enemy(new Vector3(100, 100, 0));
             enemy2 = new Enemy(new Vector3(100, 200, 0));
             door = new Door(new Vector3(100, 300, 0));
+
         }
 
         public void Initialize()
@@ -121,8 +128,8 @@ namespace ConversionFPS
                         PlayerPosition.Y -= speed * (float)Math.Cos(MathHelper.ToRadians(Rotation + 90));
                     }
 
-                    PlayerPosition.X = MathHelper.Clamp(PlayerPosition.X, 0f, 780f);
-                    PlayerPosition.Y = MathHelper.Clamp(PlayerPosition.Y, 0f, 580f);
+                    PlayerPosition.X = MathHelper.Clamp(PlayerPosition.X, 0f, MaxPlayerPosition.X);
+                    PlayerPosition.Y = MathHelper.Clamp(PlayerPosition.Y, 0f, MaxPlayerPosition.Y);
                 }
                 else
                     conversionManager.Update(gameTime);
@@ -132,7 +139,7 @@ namespace ConversionFPS
         public void Draw()
         {
             Device.Clear(Color.Black);
-            Batch.Begin();
+            Batch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp) ;
 
             if (GameState == GameState.GameOver)
                 Batch.DrawString(HUD.Font, "YOU LOSE.", Center - (HUD.Font.MeasureString("YOU LOSE") / 2), Color.DarkRed);
