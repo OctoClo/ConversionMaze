@@ -24,6 +24,7 @@ namespace ConversionFPS
 
         public void Draw(Camera camera, BasicEffect effect)
         {
+            effect.TextureEnabled = false;
             effect.VertexColorEnabled = true;
             effect.World = Matrix.Identity;
             effect.View = camera.View;

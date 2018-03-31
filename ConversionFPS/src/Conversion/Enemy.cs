@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace ConversionFPS
 {
@@ -13,12 +14,10 @@ namespace ConversionFPS
 
         int speed, damages;
 
-        public Enemy(Vector3 pos) : base(pos)
-        {
-            Initialize();
-        }
+        public Enemy(Vector3 pos) : base("", pos)
+        { }
 
-        void Initialize()
+        protected override void Initialize(string texturePath)
         {
             if (Main.LevelNumber == 1)
             {
@@ -37,6 +36,21 @@ namespace ConversionFPS
 
             speed = level;
             damages = level * 5;
+
+            switch (level)
+            {
+                case 1:
+                    base.Initialize("Conversion/EnemyLevel1");
+                    break;
+
+                case 2:
+                    base.Initialize("Conversion/EnemyLevel2");
+                    break;
+
+                case 3:
+                    base.Initialize("Conversion/EnemyLevel3");
+                    break;
+            }
 
             GenerateConversion();
         }
@@ -73,7 +87,7 @@ namespace ConversionFPS
 
         void Respawn()
         {
-            Initialize();
+            Initialize("");
             GenerateConversion();
         }
     }

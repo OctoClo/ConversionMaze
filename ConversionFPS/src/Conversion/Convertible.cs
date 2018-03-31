@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace ConversionFPS
 {
@@ -13,19 +14,17 @@ namespace ConversionFPS
 
     enum Base { Binary = 2, Decimal = 10, Hexadecimal = 16 };
 
-    abstract class Convertible
+    abstract class Convertible : Cube
     {
         public static bool IsConversionOn = false;
 
         protected int level;
-        protected Vector3 position;
 
         protected string startValue, endValue;
         protected Base startBase, endBase;
 
-        public Convertible(Vector3 pos)
+        public Convertible(string texturePath, Vector3 pos) : base(texturePath, pos)
         {
-            position = pos;
             EventManager.Instance.AddListener<OnConversionStartEvent>(HandleConversionStartEvent);
             EventManager.Instance.AddListener<OnConversionStopEvent>(HandleConversionStopEvent);
         }
@@ -44,11 +43,12 @@ namespace ConversionFPS
 
         protected abstract void HandleSuccess();
 
-        public void Draw()
+        public override void Draw(Camera camera, BasicEffect effect)
         {
-            Vector2 pos = new Vector2(position.X, position.Y);
+            base.Draw(camera, effect);
             string display = "Start (" + (int)startBase + ") : " + startValue + " - End (" + (int)endBase + ") : " + endValue; 
-            Main.Batch.DrawString(HUD.FontTiny, display, pos, Color.White);
+            Main.Batch.DrawString(HUD.FontTiny, display, new Vector2(Main.Center.X - (HUD.Font.MeasureString("YOU WIN !").X / 2),
+                                                                    Main.Center.Y - 50), Color.White);
         }
 
         protected void HandleConversionStartEvent(OnConversionStartEvent e)

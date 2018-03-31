@@ -28,13 +28,16 @@ namespace ConversionFPS
 
         float speed, rotationSpeed;
 
-        HUD hud;
         ConversionManager conversionManager;
+
+        Camera camera;
+        HUD hud;
+
+        BasicEffect effect;
+        Maze maze;
+
         Enemy enemy1, enemy2;
         Door door;
-        Camera camera;
-        Maze maze;
-        BasicEffect effect;
 
         public Main(Game1 game, GraphicsDeviceManager graphics)
         {
@@ -57,20 +60,21 @@ namespace ConversionFPS
             speed = 0.1f;
             rotationSpeed = 0.05f;
 
-            hud = new HUD();
             conversionManager = new ConversionManager();
-            enemy1 = new Enemy(new Vector3(100, 100, 0));
-            enemy2 = new Enemy(new Vector3(100, 200, 0));
-            door = new Door(new Vector3(100, 300, 0));
-
-            camera = new Camera(new Vector3(0.5f, 0.5f, 0.5f), 0, Device.Viewport.AspectRatio, 0.05f, 100f);
-            effect = new BasicEffect(Device);
-            maze = new Maze();
+            EventManager.Instance.AddListener<OnGameOverEvent>(HandleGameOverEvent);
 
             SoundManager.AddEffect("Win", "YouWin");
             SoundManager.AddEffect("GameOver", "YouLose");
 
-            EventManager.Instance.AddListener<OnGameOverEvent>(HandleGameOverEvent);
+            camera = new Camera(new Vector3(0, 0.1f, 0), 0, Device.Viewport.AspectRatio, 0.05f, 100f);
+            hud = new HUD();
+
+            effect = new BasicEffect(Device);
+            maze = new Maze();
+
+            enemy1 = new Enemy(new Vector3(3, 0, 3));
+            enemy2 = new Enemy(new Vector3(4, 0, 4));
+            door = new Door(new Vector3(10, 0, 10));            
         }
 
         public void Initialize()
@@ -160,7 +164,7 @@ namespace ConversionFPS
             else
             {
                 maze.Draw(camera, effect);
-                enemy1.Draw();
+                enemy1.Draw(camera, effect);
                 //enemy2.Draw();
                 //door.Draw();
                 hud.Draw();
