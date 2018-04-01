@@ -27,11 +27,11 @@ namespace ConversionFPS
 
             filePath = "../../../../Content/Labyrinths/" + difficulty + randVal + ".txt";
 
-            loadFile();
-            generateTexture();
+            LoadFile();
+            GenerateTexture();
         }
 
-        private void loadFile()
+        private void LoadFile()
         {
             List<string> reading = new List<string>();
 
@@ -65,7 +65,7 @@ namespace ConversionFPS
             }
         }
 
-        public void generateTexture()
+        public void GenerateTexture()
         {
             // With 10*10 pixels
             Color[,] colors = new Color[270, 270];
@@ -78,7 +78,7 @@ namespace ConversionFPS
                     if (i < 10 || i >= 260 || j < 10 || j >= 260)
                         colors[i, j] = Color.Transparent;
                     else
-                        colors[i, j] = elements[(i - 10) / 10, (j - 10) / 10].getColor();
+                        colors[i, j] = elements[(i - 10) / 10, (j - 10) / 10].GetColor();
                 }
             }
 
@@ -92,7 +92,7 @@ namespace ConversionFPS
 
         }
 
-        public Texture2D getTexture()
+        public Texture2D GetTexture()
         {
             return textureMap;
         }

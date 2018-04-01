@@ -16,7 +16,7 @@ namespace ConversionFPS
             this.tileType = tileType;
         }
 
-        public Color getColor()
+        public Color GetColor()
         {
             Color color = Color.Transparent;
 

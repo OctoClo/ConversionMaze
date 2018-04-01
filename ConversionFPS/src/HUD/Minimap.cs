@@ -30,7 +30,7 @@ namespace ConversionFPS
             position = new Vector2(820, 50);
 
             spriteContainer = new Sprite("HUD/MinimapContainer");
-            spriteMinimap = new Sprite(Main.map1.getTexture());
+            spriteMinimap = new Sprite(Main.map1.GetTexture());
             spriteCursor = new Sprite("HUD/PlayerCursor");
 
             containerZone = new Rectangle((int)position.X, (int)position.Y, (int)Size.X, (int)Size.Y);
@@ -52,8 +52,8 @@ namespace ConversionFPS
         {
             Vector2 location = new Vector2();
             Vector2 size = new Vector2(spriteMinimap.Width / 2f - 20, minimapDisplayZone.Height * spriteMinimap.Height / ( minimapDisplayZone.Width * 2f));
-            location.X = -(size.X / 2 - 10) + Main.PlayerPosition.X * ((size.X * 2f + 20f) / (Main.MaxPlayerPosition.X));
-            location.Y = -(size.Y / 2 - 10) + Main.PlayerPosition.Y * ((size.X * 2f + 20f) / (Main.MaxPlayerPosition.Y));
+            location.X = -(size.X / 2 - 10) + Main.Camera.Position.Z * ((size.X * 2f + 20f) / (Maze.Width));
+            location.Y = -(size.Y / 2 - 10) + Main.Camera.Position.X * ((size.X * 2f + 20f) / (Maze.Height));
 
             minimapDisplayPart = new Rectangle((int)location.X, (int)location.Y, (int)size.X, (int)size.Y);
         }
