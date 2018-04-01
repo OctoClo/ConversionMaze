@@ -4,23 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace ConversionFPS
 {
     class Camera
     {
-        public Matrix Projection;
+        public Matrix Projection { get; private set; }
 
         public Matrix View
         {
-            get
-            {
-                if (needViewResync)
-                    cachedViewMatrix = Matrix.CreateLookAt(Position, lookAt, Vector3.Up);
-                return cachedViewMatrix;
-            }
+            get { return Matrix.CreateLookAt(position, lookAt, Vector3.Up); }
         }
-
+        
         public Vector3 Position
         {
             get { return position; }
@@ -31,7 +27,7 @@ namespace ConversionFPS
             }
         }
 
-        public float Rotation
+        public Vector3 Rotation
         {
             get { return rotation; }
             set
@@ -40,39 +36,97 @@ namespace ConversionFPS
                 UpdateLookAt();
             }
         }
-        
-        Matrix cachedViewMatrix;
-        Vector3 position = Vector3.Zero;
-        float rotation;
 
+        Vector3 position;
+        Vector3 rotation;
         Vector3 lookAt;
-        Vector3 baseCameraReference;
-        bool needViewResync;
+        
+        float cameraSpeed;
+        Vector3 mouseRotation;
 
-        public Camera(Vector3 position, float rotation, float aspectRatio, float nearClip, float farClip)
+        public Camera(Vector3 position, Vector3 rotation, float speed)
         {
-            baseCameraReference = new Vector3(0, 0, 1);
-            needViewResync = true;
+            cameraSpeed = speed;
 
-            Projection = Matrix.CreatePerspectiveFieldOfView( MathHelper.PiOver4, aspectRatio, nearClip, farClip);
+            Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, Main.Device.Viewport.AspectRatio, 0.05f, 50.0f);
             MoveTo(position, rotation);
+
+            Main.Instance.IsMouseVisible = false;
         }
 
-        public void MoveTo(Vector3 position, float rotation)
+        public void Update(GameTime gameTime)
         {
-            this.position = position;
-            this.rotation = rotation;
-            UpdateLookAt();
+            float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            Vector3 moveVector = Vector3.Zero;
+
+            if (Input.KeyPressed(Keys.Z, false))
+                moveVector.Z += 1;
+            if (Input.KeyPressed(Keys.S, false))
+                moveVector.Z -= 1;
+            if (Input.KeyPressed(Keys.Q, false))
+                moveVector.X += 1;
+            if (Input.KeyPressed(Keys.D, false))
+                moveVector.X -= 1;
+
+            if (moveVector != Vector3.Zero)
+            {
+                moveVector.Normalize();
+                moveVector *= elapsed * cameraSpeed;
+                Vector3 preview = PreviewMove(moveVector);
+                if (preview.X >= 0 && preview.X < Maze.Width && preview.Z >= 0 && preview.Z < Maze.Height)
+                    Move(moveVector);
+            }
+
+            float deltaX, deltaY;
+
+            if (Input.PreviousMouseState != Input.CurrentMouseState)
+            {
+                deltaX = Input.CurrentMouseState.X - Main.Center.X;
+                deltaY = Input.CurrentMouseState.Y - Main.Center.Y;
+
+                mouseRotation.X -= 0.1f * deltaX * elapsed;
+                mouseRotation.Y -= 0.1f * deltaY * elapsed;
+
+                if (mouseRotation.Y < MathHelper.ToRadians(-75.0f))
+                    mouseRotation.Y = mouseRotation.Y - (mouseRotation.Y - MathHelper.ToRadians(-75.0f));
+                if (mouseRotation.Y > MathHelper.ToRadians(75.0f))
+                    mouseRotation.Y = mouseRotation.Y - (mouseRotation.Y - MathHelper.ToRadians(75.0f));
+
+                Rotation = new Vector3(-MathHelper.Clamp(mouseRotation.Y, MathHelper.ToRadians(-75.0f), MathHelper.ToRadians(75.0f)),
+                                       MathHelper.WrapAngle(mouseRotation.X), 0);
+
+                deltaX = 0;
+                deltaY = 0;
+            }
+
+            Mouse.SetPosition((int)Main.Center.X, (int)Main.Center.Y);
+        }
+
+        Vector3 PreviewMove(Vector3 scale)
+        {
+            Matrix rotate = Matrix.CreateRotationY(rotation.Y);
+            Vector3 forward = new Vector3(scale.X, scale.Y, scale.Z);
+            forward = Vector3.Transform(forward, rotate);
+            return (position + forward);
+        }
+
+        void Move(Vector3 scale)
+        {
+            MoveTo(PreviewMove(scale), Rotation);
+        }
+
+        void MoveTo(Vector3 position, Vector3 rotation)
+        {
+            Position = position;
+            Rotation = rotation;
         }
 
         void UpdateLookAt()
         {
-            Matrix rotationMatrix = Matrix.CreateRotationY(rotation);
-            Vector3 lookAtOffset = Vector3.Transform(
-            baseCameraReference,
-            rotationMatrix);
+            Matrix rotationMatrix = Matrix.CreateRotationX(rotation.X) * Matrix.CreateRotationY(rotation.Y);
+            Vector3 lookAtOffset = Vector3.Transform(Vector3.UnitZ, rotationMatrix);
             lookAt = position + lookAtOffset;
-            needViewResync = true;
         }
     }
 }

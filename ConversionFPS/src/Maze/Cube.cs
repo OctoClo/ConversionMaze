@@ -48,14 +48,13 @@ namespace ConversionFPS
             effect.VertexColorEnabled = false;
             effect.TextureEnabled = true;
             effect.Texture = texture;
-
-            Matrix center = Matrix.CreateTranslation(new Vector3(-0.5f, -0.5f, -0.5f));
-            Matrix scale = Matrix.CreateScale(0.5f);
+            
+            Matrix scale = Matrix.CreateScale(1);
             Matrix translate = Matrix.CreateTranslation(position);
 
-            effect.World = center * scale * translate;
             effect.View = camera.View;
             effect.Projection = camera.Projection;
+            effect.World = scale * translate;
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {

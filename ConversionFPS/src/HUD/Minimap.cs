@@ -11,7 +11,8 @@ namespace ConversionFPS
 {
     class Minimap
     {
-        Vector2 size, position;
+        public static Vector2 Size;
+        Vector2 position;
 
         Sprite spriteContainer, spriteMinimap, spriteCursor;
 
@@ -25,32 +26,32 @@ namespace ConversionFPS
 
         public Minimap()
         {
-            size = new Vector2(400, 300);
+            Size = new Vector2(400, 300);
             position = new Vector2(820, 50);
 
             spriteContainer = new Sprite("HUD/MinimapContainer");
             spriteMinimap = new Sprite("HUD/MinimapTest");
             spriteCursor = new Sprite("HUD/PlayerCursor");
 
-            containerZone = new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
-            minimapDisplayZone = new Rectangle((int)position.X + 10, (int)position.Y + 10, (int)size.X - 20, (int)size.Y - 20);
+            containerZone = new Rectangle((int)position.X, (int)position.Y, (int)Size.X, (int)Size.Y);
+            minimapDisplayZone = new Rectangle((int)position.X + 10, (int)position.Y + 10, (int)Size.X - 20, (int)Size.Y - 20);
             UpdateMinimapDisplayPart();
 
             cursorSize = 40;
             cursorRot = 0f;
-            cursorRect = new Rectangle((int)(position.X + size.X / 2), (int)(position.Y + size.Y / 2), cursorSize, cursorSize);
+            cursorRect = new Rectangle((int)(position.X + Size.X / 2), (int)(position.Y + Size.Y / 2), cursorSize, cursorSize);
         }
 
         public void Update(GameTime gameTime)
         {
-            cursorRot = (float)((2f * Math.PI * (Main.Rotation % 360) / 360f));
+            cursorRot = Main.Camera.Rotation.Y + MathHelper.PiOver2;
             UpdateMinimapDisplayPart();
         }
 
         void UpdateMinimapDisplayPart()
         {
-            minimapDisplayPart = new Rectangle((int)(Main.PlayerPosition.X - (spriteMinimap.Width / 4)),
-                                            (int)(Main.PlayerPosition.Y - (spriteMinimap.Height / 4)),
+            minimapDisplayPart = new Rectangle((int)(Main.Camera.Position.Z - (spriteMinimap.Width / 4)),
+                                            (int)(Main.Camera.Position.X - (spriteMinimap.Height / 4)),
                                             spriteMinimap.Width / 2, spriteMinimap.Height / 2);
         }
 

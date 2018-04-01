@@ -10,8 +10,8 @@ namespace ConversionFPS
 {
     class Maze
     {
-        public const int mazeWidth = 20;
-        public const int mazeHeight = 20;
+        public static int Width;
+        public static int Height;
 
         GraphicsDevice device;
         VertexBuffer floorBuffer;
@@ -19,16 +19,20 @@ namespace ConversionFPS
         public Maze()
         {
             device = Main.Device;
+            Width = (int)Minimap.Size.X;
+            Height = (int)Minimap.Size.Y;
             BuildFloorBuffer();
         }
 
         public void Draw(Camera camera, BasicEffect effect)
         {
-            effect.TextureEnabled = false;
             effect.VertexColorEnabled = true;
-            effect.World = Matrix.Identity;
+            effect.TextureEnabled = false;
+
             effect.View = camera.View;
             effect.Projection = camera.Projection;
+            effect.World = Matrix.Identity;
+            
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -40,14 +44,17 @@ namespace ConversionFPS
         void BuildFloorBuffer()
         {
             List<VertexPositionColor> vertexList = new List<VertexPositionColor>();
-            List<VertexPositionColor> vertexTile;
 
-            for (int x = 0; x < mazeWidth; x++)
+            Color[] colors = { Color.Black, Color.White };
+            int colorCounter = 0;
+
+            for (int x = 0; x < Width; x++)
             {
-                for (int z = 0; z < mazeHeight; z++)
+                colorCounter++;
+                for (int z = 0; z < Height; z++)
                 {
-                    vertexTile = FloorTile(x, z, Color.Gainsboro);
-                    foreach (VertexPositionColor vertex in vertexTile)
+                    colorCounter++;
+                    foreach (VertexPositionColor vertex in FloorTile(x, z, colors[colorCounter % 2]))
                         vertexList.Add(vertex);
                 }
             }
