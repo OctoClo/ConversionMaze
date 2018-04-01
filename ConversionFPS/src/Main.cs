@@ -35,6 +35,8 @@ namespace ConversionFPS
         Enemy enemy1, enemy2;
         Door door;
 
+        public static Map map1;
+
         public Main(Game1 game, GraphicsDeviceManager graphics)
         {
             Instance = game;
@@ -52,6 +54,7 @@ namespace ConversionFPS
 
             conversionManager = new ConversionManager();
             EventManager.Instance.AddListener<OnGameOverEvent>(HandleGameOverEvent);
+            map1 = new Map(1);
 
             SoundManager.AddEffect("Win", "YouWin");
             SoundManager.AddEffect("GameOver", "YouLose");
@@ -112,7 +115,7 @@ namespace ConversionFPS
         public void Draw()
         {
             Device.Clear(Color.Black);
-            Batch.Begin();
+            Batch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp) ;
 
             if (GameState == GameState.GameOver)
                 Batch.DrawString(HUD.Font, "YOU LOSE.", Center - (HUD.Font.MeasureString("YOU LOSE") / 2), Color.DarkRed);
