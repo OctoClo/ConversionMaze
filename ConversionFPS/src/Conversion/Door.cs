@@ -11,9 +11,14 @@ namespace ConversionFPS
     {
         public bool IsOpen;
 
-        public Door(Vector3 pos) : base(pos)
+        public Door(Vector3 pos) : base("", pos)
         {
             IsOpen = false;
+        }
+
+        protected override void Initialize(string texturePath)
+        {
+            base.Initialize("Conversion/Door");
             GenerateConversion();
         }
 

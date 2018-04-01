@@ -15,6 +15,12 @@ namespace ConversionFPS
         string number;
         bool firstInput;
 
+        public ConversionManager()
+        {
+            SoundManager.AddEffect("ConversionOK", "Conversion/correct");
+            SoundManager.AddEffect("ConversionKO", "Conversion/wrong");
+        }
+
         public void Initialize(Convertible convertible)
         {
             this.convertible = convertible;
@@ -32,7 +38,10 @@ namespace ConversionFPS
 
             if (Input.KeyPressed(Keys.Enter, true))
             {
-                convertible.CheckSuccess(number);
+                if (convertible.CheckSuccess(number))
+                    SoundManager.Play("ConversionOK");
+                else
+                    SoundManager.Play("ConversionKO");
                 EventManager.Instance.Raise(new OnConversionStopEvent() { convertible = convertible });
             }
             else if (Input.KeyPressed(Keys.Back, true))
