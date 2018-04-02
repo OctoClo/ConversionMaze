@@ -97,45 +97,52 @@ namespace ConversionFPS
 				{
 					hud.Update(gameTime);
                     Maze.Update(gameTime);
-					
-					if (Input.KeyPressed(Keys.E, true) && !Convertible.IsConversionOn)
-					{
-						closestConvertible = null;
-						double minDist = 9999 ;
 
-						// Find the closest Convertibles in the front of the camera 
-						foreach (Convertible c in Maze.Convertibles)
-						{
+                    if (Input.KeyPressed(Keys.E, true) && !Convertible.IsConversionOn)
+                    {
+                        closestConvertible = null;
+                        double minDist = 9999;
 
-							if ( Maze.IsInFront(c, Camera) )
-							{
-								// Check if the distance is less than the previous minimum
-								double distance = Math.Sqrt((double)(Math.Pow(c.Position.X - Camera.Position.X, 2) + Math.Pow(c.Position.Z - Camera.Position.Z, 2)));
-								if (distance < minDist)
-								{
-									// Check if said convertible is visible by the camera
-									if (Maze.IsPathClear(c, Camera, Maze))
-									{
-										minDist = distance;
-										closestConvertible = c;
-									}
-								}
-							}
-						}
+                        // Find the closest Convertibles in the front of the camera 
+                        foreach (Convertible c in Maze.Convertibles)
+                        {
 
-						if (closestConvertible != null) Debug.Print("Closest : " + closestConvertible.Position.X + ";" + closestConvertible.Position.Y);
-						else Debug.Print("null");
-						
-						if (closestConvertible != null)
-						{
-							EventManager.Instance.Raise(new OnConversionStartEvent() { convertible = closestConvertible });
-							conversionManager.Initialize(closestConvertible);
-						}
-					}
-					else if (Input.KeyPressed(Keys.Escape, true) && Convertible.IsConversionOn)
-						EventManager.Instance.Raise(new OnConversionStopEvent() { convertible = closestConvertible });
-					else if (Input.KeyPressed(Keys.Escape, true))
-						Instance.Exit();
+                            if (Maze.IsInFront(c, Camera))
+                            {
+                                // Check if the distance is less than the previous minimum
+                                double distance = Math.Sqrt((double)(Math.Pow(c.Position.X - Camera.Position.X, 2) + Math.Pow(c.Position.Z - Camera.Position.Z, 2)));
+                                if (distance < minDist)
+                                {
+                                    // Check if said convertible is visible by the camera
+                                    if (Maze.IsPathClear(c, Camera, Maze))
+                                    {
+                                        minDist = distance;
+                                        closestConvertible = c;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (closestConvertible != null)
+                        {
+                            Debug.Print("Closest : " + closestConvertible.Position.X + ";" + closestConvertible.Position.Y);
+                            closestConvertible.DisplayConv = true;
+                        }
+                        else Debug.Print("nothing found");
+
+                        if (closestConvertible != null)
+                        {
+                            EventManager.Instance.Raise(new OnConversionStartEvent() { convertible = closestConvertible });
+                            conversionManager.Initialize(closestConvertible);
+                        }
+                    }
+                    else if (Input.KeyPressed(Keys.Escape, true) && Convertible.IsConversionOn)
+                    {
+                        EventManager.Instance.Raise(new OnConversionStopEvent() { convertible = closestConvertible });
+                        closestConvertible.DisplayConv = false;
+                    }
+                    else if (Input.KeyPressed(Keys.Escape, true))
+                        Instance.Exit();
 
 					// Move only if the player is not currently converting
 					if (!Convertible.IsConversionOn)

@@ -38,6 +38,7 @@ namespace ConversionFPS
 
             if (Input.KeyPressed(Keys.Enter, true))
             {
+                convertible.DisplayConv = false;
                 if (convertible.CheckSuccess(number))
                     SoundManager.Play("ConversionOK");
                 else
@@ -45,7 +46,9 @@ namespace ConversionFPS
                 EventManager.Instance.Raise(new OnConversionStopEvent() { convertible = convertible });
             }
             else if (Input.KeyPressed(Keys.Back, true))
+            { 
                 number = number.Remove(number.Length - 1);
+            }
             else
             {
                 Keys[] keys = Input.KeysPressed();

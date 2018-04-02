@@ -17,6 +17,7 @@ namespace ConversionFPS
     abstract class Convertible : Cube
     {
         public static bool IsConversionOn = false;
+        public bool DisplayConv;
 
         protected int level;
 
@@ -27,6 +28,8 @@ namespace ConversionFPS
         {
             EventManager.Instance.AddListener<OnConversionStartEvent>(HandleConversionStartEvent);
             EventManager.Instance.AddListener<OnConversionStopEvent>(HandleConversionStopEvent);
+
+            DisplayConv = false;
         }
 
         protected abstract void GenerateConversion();
@@ -49,11 +52,15 @@ namespace ConversionFPS
         public override void Draw(Camera camera, BasicEffect effect, float scale = 1)
         {
             base.Draw(camera, effect, scale);
-            /*Main.Batch.Begin();
+
+            if (DisplayConv)
+            {
+                Main.Batch.Begin();
             string display = "Start (" + (int)startBase + ") : " + startValue + " - End (" + (int)endBase + ") : " + endValue; 
             Main.Batch.DrawString(HUD.FontTiny, display, new Vector2(Main.Center.X - (HUD.Font.MeasureString("YOU WIN !").X / 2),
                                                                     Main.Center.Y - 50), Color.White);
-            Main.Batch.End();*/                                                 
+            Main.Batch.End();
+            }
         }
 
         protected void HandleConversionStartEvent(OnConversionStartEvent e)
