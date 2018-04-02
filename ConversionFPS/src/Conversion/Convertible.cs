@@ -43,6 +43,9 @@ namespace ConversionFPS
 
         protected abstract void HandleSuccess();
 
+        public virtual void Update(GameTime gameTime)
+        { }
+
         public override void Draw(Camera camera, BasicEffect effect, float scale = 1)
         {
             base.Draw(camera, effect, scale);

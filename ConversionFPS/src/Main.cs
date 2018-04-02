@@ -32,8 +32,6 @@ namespace ConversionFPS
         BasicEffect effect;
         Maze maze;
 
-        Enemy enemy1;
-
         public Main(Game1 game, GraphicsDeviceManager graphics)
         {
             Instance = game;
@@ -61,8 +59,6 @@ namespace ConversionFPS
 
             effect = new BasicEffect(Device);
             maze = new Maze();
-
-            enemy1 = new Enemy(new Vector3(3, 0, 3));
         }
 
         public void Initialize()
@@ -78,32 +74,37 @@ namespace ConversionFPS
 
         public void Update(GameTime gameTime)
         {
-            Input.Update();
-
-            if (GameState == GameState.GameOver || GameState == GameState.Win)
+            if (Instance.IsActive)
             {
-                if (Input.KeyPressed(Keys.Escape, true))
-                    Instance.Exit();
-            }
-            else
-            {
-                hud.Update(gameTime);
+                Input.Update();
 
-                /*if (Input.KeyPressed(Keys.E, true) && !Convertible.IsConversionOn)
+                if (GameState == GameState.GameOver || GameState == GameState.Win)
                 {
-                    EventManager.Instance.Raise(new OnConversionStartEvent() { convertible = enemy1 });
-                    conversionManager.Initialize(enemy1);
+                    if (Input.KeyPressed(Keys.Escape, true))
+                        Instance.Exit();
                 }
-                else if (Input.KeyPressed(Keys.Escape, true) && Convertible.IsConversionOn)
-                    EventManager.Instance.Raise(new OnConversionStopEvent() { convertible = enemy1 });
-                else */if (Input.KeyPressed(Keys.Escape, true))
-                    Instance.Exit();
-
-                // Move only if the player is not currently converting
-                if (!Convertible.IsConversionOn)
-                    Camera.Update(gameTime);
                 else
-                    conversionManager.Update(gameTime);
+                {
+                    hud.Update(gameTime);
+                    maze.Update(gameTime);
+
+                    /*if (Input.KeyPressed(Keys.E, true) && !Convertible.IsConversionOn)
+                    {
+                        EventManager.Instance.Raise(new OnConversionStartEvent() { convertible = enemy1 });
+                        conversionManager.Initialize(enemy1);
+                    }
+                    else if (Input.KeyPressed(Keys.Escape, true) && Convertible.IsConversionOn)
+                        EventManager.Instance.Raise(new OnConversionStopEvent() { convertible = enemy1 });
+                    else */
+                    if (Input.KeyPressed(Keys.Escape, true))
+                        Instance.Exit();
+
+                    // Move only if the player is not currently converting
+                    if (!Convertible.IsConversionOn)
+                        Camera.Update(gameTime);
+                    else
+                        conversionManager.Update(gameTime);
+                }
             }
         }
 
@@ -127,7 +128,6 @@ namespace ConversionFPS
             {
                 Device.Clear(Color.DeepSkyBlue);
                 maze.Draw(Camera, effect);
-                enemy1.Draw(Camera, effect);
                 hud.Draw();
                 if (Convertible.IsConversionOn)
                     conversionManager.Draw();

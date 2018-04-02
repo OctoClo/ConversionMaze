@@ -11,7 +11,7 @@ namespace ConversionFPS
 {
     class Timer
     {
-        float timeF;
+        public static float TimeF;
         int time, minutes, seconds;
         string timer, level;
 
@@ -21,7 +21,7 @@ namespace ConversionFPS
 
         public Timer()
         {
-            timeF = 180f;
+            TimeF = 180f;
             slowDown = 1;
             timePosition = new Vector2((Main.Width / 2) - (HUD.Font.MeasureString("2:22").X / 2), 50);
             levelPosition = new Vector2((Main.Width / 2) - (HUD.FontTiny.MeasureString("level 2").X / 2), 15);
@@ -31,11 +31,11 @@ namespace ConversionFPS
 
         public void Update(GameTime gameTime)
         {
-            timeF -= (gameTime.ElapsedGameTime.Milliseconds / 1000f) / slowDown;
-            if (timeF < 0)
+            TimeF -= (gameTime.ElapsedGameTime.Milliseconds / 1000f) / slowDown;
+            if (TimeF < 0)
                 EventManager.Instance.Raise(new OnGameOverEvent());
 
-            time = MathHelper.Clamp((int)(Math.Round(timeF) + .5f), 0, 999);
+            time = MathHelper.Clamp((int)(Math.Round(TimeF) + .5f), 0, 999);
             minutes = time / 60;
             seconds = time % 60;
 
