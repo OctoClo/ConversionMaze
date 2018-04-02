@@ -114,23 +114,28 @@ namespace ConversionFPS
 
         public void Draw()
         {
-            Device.Clear(Color.Black);
-            Batch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp) ;
+            Device.Clear(Color.DeepSkyBlue);
 
             if (GameState == GameState.GameOver)
+            {
+                Batch.Begin();
                 Batch.DrawString(HUD.Font, "YOU LOSE.", Center - (HUD.Font.MeasureString("YOU LOSE") / 2), Color.DarkRed);
+                Batch.End();
+            }
             else if (GameState == GameState.Win)
+            {
+                Batch.Begin();
                 Batch.DrawString(HUD.Font, "YOU WIN !", Center - (HUD.Font.MeasureString("YOU WIN !") / 2), Color.White);
+                Batch.End();
+            }
             else
             {
                 maze.Draw(Camera, effect);
-                enemy1.Draw(Camera, effect);
+                //enemy1.Draw(Camera, effect);
                 hud.Draw();
                 if (Convertible.IsConversionOn)
                     conversionManager.Draw();
             }
-            
-            Batch.End();
         }
 
         void HandleGameOverEvent(OnGameOverEvent e)

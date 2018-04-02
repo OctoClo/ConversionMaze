@@ -46,9 +46,11 @@ namespace ConversionFPS
         public override void Draw(Camera camera, BasicEffect effect)
         {
             base.Draw(camera, effect);
+            /*Main.Batch.Begin();
             string display = "Start (" + (int)startBase + ") : " + startValue + " - End (" + (int)endBase + ") : " + endValue; 
             Main.Batch.DrawString(HUD.FontTiny, display, new Vector2(Main.Center.X - (HUD.Font.MeasureString("YOU WIN !").X / 2),
                                                                     Main.Center.Y - 50), Color.White);
+            Main.Batch.End();*/                                                 
         }
 
         protected void HandleConversionStartEvent(OnConversionStartEvent e)

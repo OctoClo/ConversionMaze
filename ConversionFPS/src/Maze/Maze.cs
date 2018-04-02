@@ -26,6 +26,9 @@ namespace ConversionFPS
 
         public void Draw(Camera camera, BasicEffect effect)
         {
+            Main.Device.BlendState = BlendState.Opaque;
+            Main.Device.DepthStencilState = DepthStencilState.Default;
+
             effect.VertexColorEnabled = true;
             effect.TextureEnabled = false;
 
