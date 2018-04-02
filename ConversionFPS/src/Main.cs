@@ -24,13 +24,12 @@ namespace ConversionFPS
         public static int LevelNumber;
 
         public static Camera Camera;
+        public static Maze Maze;
 
         ConversionManager conversionManager;
         
         HUD hud;
-
         BasicEffect effect;
-        Maze maze;
 
         public Main(Game1 game, GraphicsDeviceManager graphics)
         {
@@ -55,10 +54,10 @@ namespace ConversionFPS
             SoundManager.AddEffect("GameOver", "YouLose");
 
             Camera = new Camera(new Vector3(1.2f, 0.8f, 1.2f), Vector3.Zero, 5f);
-            hud = new HUD();
+            Maze = new Maze();
 
+            hud = new HUD();
             effect = new BasicEffect(Device);
-            maze = new Maze();
         }
 
         public void Initialize()
@@ -86,7 +85,7 @@ namespace ConversionFPS
                 else
                 {
                     hud.Update(gameTime);
-                    maze.Update(gameTime);
+                    Maze.Update(gameTime);
 
                     /*if (Input.KeyPressed(Keys.E, true) && !Convertible.IsConversionOn)
                     {
@@ -127,7 +126,7 @@ namespace ConversionFPS
             else
             {
                 Device.Clear(Color.DeepSkyBlue);
-                maze.Draw(Camera, effect);
+                Maze.Draw(Camera, effect);
                 hud.Draw();
                 if (Convertible.IsConversionOn)
                     conversionManager.Draw();

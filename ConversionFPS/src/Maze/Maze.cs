@@ -33,6 +33,11 @@ namespace ConversionFPS
             BuildFloorBuffer();
         }
 
+        public Cube GetCube(int x, int y)
+        {
+            return maze[y, x];
+        }
+
         public void Update(GameTime gameTime)
         {
             foreach (Convertible conv in convertibles)
