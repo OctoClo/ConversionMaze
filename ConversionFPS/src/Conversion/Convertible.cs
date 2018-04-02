@@ -14,6 +14,8 @@ namespace ConversionFPS
 
     enum Base { Binary = 2, Decimal = 10, Hexadecimal = 16 };
 
+    
+
     abstract class Convertible : Cube
     {
         public static bool IsConversionOn = false;
@@ -30,6 +32,7 @@ namespace ConversionFPS
             EventManager.Instance.AddListener<OnConversionStopEvent>(HandleConversionStopEvent);
 
             DisplayConv = false;
+
         }
 
         protected abstract void GenerateConversion();
@@ -51,14 +54,19 @@ namespace ConversionFPS
 
         public override void Draw(Camera camera, BasicEffect effect, float scale = 1)
         {
+
+            Main.Device.BlendState = BlendState.Opaque;
+            Main.Device.DepthStencilState = DepthStencilState.Default;
             base.Draw(camera, effect, scale);
 
             if (DisplayConv)
             {
                 Main.Batch.Begin();
-            string display = "Start (" + (int)startBase + ") : " + startValue + " - End (" + (int)endBase + ") : " + endValue; 
-            Main.Batch.DrawString(HUD.FontTiny, display, new Vector2(Main.Center.X - (HUD.Font.MeasureString("YOU WIN !").X / 2),
-                                                                    Main.Center.Y - 50), Color.White);
+                Main.Batch.Draw(Main.TextureRect, new Rectangle(Main.Width/2 - 320, Main.Height/2 - 55, 750, 40), Color.White);
+                string displayDebug = "Start (" + (int)startBase + ") : " + startValue + " - End (" + (int)endBase + ") : " + endValue; 
+                string display = "Convert " + startValue + " from base " + (int)startBase + " to base " + (int)endBase + "   (psst : " + endValue + ")" ;
+                Main.Batch.DrawString(HUD.FontTiny, display, new Vector2(Main.Center.X - (HUD.Font.MeasureString("YOU WIN !ZZZZZZ").X / 2),
+                                                                    Main.Center.Y - 50), Color.Black);
             Main.Batch.End();
             }
         }

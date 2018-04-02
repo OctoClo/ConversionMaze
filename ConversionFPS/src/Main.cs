@@ -19,6 +19,7 @@ namespace ConversionFPS
         public static GraphicsDevice Device;
         public static SpriteBatch Batch;
         public static Random Rand;
+        public static Texture2D TextureRect;
 
         public static int Height, Width;
         public static Vector2 Center;
@@ -42,6 +43,8 @@ namespace ConversionFPS
             Device = Graphics.GraphicsDevice;
             Batch = new SpriteBatch(Device);
             Rand = new Random();
+            TextureRect = new Texture2D(Main.Device, 1, 1);
+            TextureRect.SetData<Color>(new Color[1] { Color.LightGray });
 
             Height = 800;
             Width = 1280;

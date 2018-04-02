@@ -169,10 +169,10 @@ namespace ConversionFPS
         // Check if Convertible in same column
         private static bool IsInSameColumn(Convertible c, Camera cam) { return ((int)c.Position.X == (int)cam.Position.X); }
 
-        // Check if Convertible Y value is greater than camera's
+        // Check if Convertible Z value is greater than camera's
         private static bool IsUnderCam(Convertible c, Camera cam) { return (IsInSameColumn(c, cam) && (int)c.Position.Z >= cam.Position.Z); }
 
-        // Check if Convertible Y value is lower than camera's
+        // Check if Convertible Z value is lower than camera's
         private static bool IsOverCam(Convertible c, Camera cam) { return (IsInSameColumn(c, cam) && (int)c.Position.Z <= cam.Position.Z); }
 
         // Check if Convertible X value is greater than camera's

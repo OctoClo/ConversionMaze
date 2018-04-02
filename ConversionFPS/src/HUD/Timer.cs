@@ -53,9 +53,10 @@ namespace ConversionFPS
 
         public void Draw()
         {
-            Main.Batch.DrawString(HUD.FontTiny, level, levelPosition, Color.White);
+            Main.Batch.Draw(Main.TextureRect, new Rectangle((int)levelPosition.X - 20, (int)levelPosition.Y - 5, 130, 115), Color.White);
+            Main.Batch.DrawString(HUD.FontTiny, level, levelPosition, Color.Black);
             if ( time >= 10 )
-                Main.Batch.DrawString(HUD.Font, timer, timePosition, Color.White);
+                Main.Batch.DrawString(HUD.Font, timer, timePosition, Color.Black);
             else
                 Main.Batch.DrawString(HUD.Font, timer, timePosition, Color.DarkRed);
         }
