@@ -81,12 +81,12 @@ namespace ConversionFPS
 
         void BuildFace(Vector3 p1, Vector3 p2)
         {
-            vertices.Add(BuildVertex(p1.X, p1.Y, p1.Z, 1, 0));
-            vertices.Add(BuildVertex(p1.X, p2.Y, p1.Z, 1, 1));
-            vertices.Add(BuildVertex(p2.X, p2.Y, p2.Z, 0, 1));
-            vertices.Add(BuildVertex(p2.X, p2.Y, p2.Z, 0, 1));
-            vertices.Add(BuildVertex(p2.X, p1.Y, p2.Z, 0, 0));
-            vertices.Add(BuildVertex(p1.X, p1.Y, p1.Z, 1, 0));
+            vertices.Add(BuildVertex(p1.X, p1.Y, p1.Z, 0, 1));
+            vertices.Add(BuildVertex(p1.X, p2.Y, p1.Z, 0, 0));
+            vertices.Add(BuildVertex(p2.X, p2.Y, p2.Z, 1, 0));
+            vertices.Add(BuildVertex(p2.X, p2.Y, p2.Z, 1, 0));
+            vertices.Add(BuildVertex(p2.X, p1.Y, p2.Z, 1, 1));
+            vertices.Add(BuildVertex(p1.X, p1.Y, p1.Z, 0, 1));
         }
 
         void BuildFaceHorizontal(Vector3 p1, Vector3 p2)
