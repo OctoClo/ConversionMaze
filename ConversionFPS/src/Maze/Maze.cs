@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ConversionFPS
 {
+    class OnLevelEndEvent : GameEvent { }
+
     class Maze
     {
         public static int Width;
@@ -15,6 +17,7 @@ namespace ConversionFPS
 
         GraphicsDevice device;
         Cube[,] maze;
+        Convertible[] convertibles;
         VertexBuffer floorBuffer;
 
         public Maze()
@@ -23,7 +26,24 @@ namespace ConversionFPS
             maze = MazeBuilder.GenerateMaze();
             Width = MazeBuilder.ElementsPerRow;
             Height = MazeBuilder.ElementsPerRow;
+            convertibles = new Convertible[5];
+            convertibles[0] = new Enemy(new Vector3(3, 0, 3));
+            convertibles[1] = new Enemy(new Vector3(1, 0, 3));
+            convertibles[2] = new Enemy(new Vector3(3, 0, 1));
+            convertibles[3] = new Enemy(new Vector3(15, 0, 21));
+            convertibles[4] = new Enemy(new Vector3(3, 0, 17));
             BuildFloorBuffer();
+        }
+
+        public Cube GetCube(int x, int y)
+        {
+            return maze[y, x];
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            foreach (Convertible conv in convertibles)
+                conv.Update(gameTime);
         }
 
         public void Draw(Camera camera, BasicEffect effect)
@@ -47,6 +67,9 @@ namespace ConversionFPS
 
             foreach (Cube cube in maze)
                 cube.Draw(camera, effect);
+
+            foreach (Convertible conv in convertibles)
+                conv.Draw(camera, effect);
         }
 
         void BuildFloorBuffer()

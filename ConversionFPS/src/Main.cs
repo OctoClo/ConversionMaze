@@ -5,7 +5,7 @@ using System;
 
 namespace ConversionFPS
 {
-    enum GameState { Level1, Level2, Win, GameOver };
+    enum GameState { Playing, Transition, Win, GameOver };
 
     class OnGameOverEvent : GameEvent { }
 
@@ -24,15 +24,11 @@ namespace ConversionFPS
         public static int LevelNumber;
 
         public static Camera Camera;
+        public static Maze Maze;
 
         ConversionManager conversionManager;
-        
         HUD hud;
-
         BasicEffect effect;
-        Maze maze;
-
-        Enemy enemy1;
 
         public Main(Game1 game, GraphicsDeviceManager graphics)
         {
@@ -46,23 +42,18 @@ namespace ConversionFPS
             Width = 1280;
             Center = new Vector2(Width / 2, Height / 2);
 
-            GameState = GameState.Level1;
-            LevelNumber = 1;
+            GameState = GameState.Playing;
 
             conversionManager = new ConversionManager();
-            EventManager.Instance.AddListener<OnGameOverEvent>(HandleGameOverEvent);
-            MazeBuilder.Initialize(1);
+            effect = new BasicEffect(Device);
 
             SoundManager.AddEffect("Win", "YouWin");
             SoundManager.AddEffect("GameOver", "YouLose");
 
-            Camera = new Camera(new Vector3(1.2f, 0.8f, 1.2f), Vector3.Zero, 5f);
-            hud = new HUD();
+            EventManager.Instance.AddListener<OnGameOverEvent>(HandleGameOverEvent);
+            EventManager.Instance.AddListener<OnLevelEndEvent>(HandleOnLevelEndEvent);
 
-            effect = new BasicEffect(Device);
-            maze = new Maze();
-
-            enemy1 = new Enemy(new Vector3(3, 0, 3));
+            LoadLevel(1);
         }
 
         public void Initialize()
@@ -76,61 +67,81 @@ namespace ConversionFPS
                                                  (GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2) - (Height / 2) - 40);
         }
 
+        void LoadLevel(int level)
+        {
+            LevelNumber = level;
+            MazeBuilder.Initialize(LevelNumber);
+            Camera = new Camera(new Vector3(1.2f, 0.8f, 1.2f), Vector3.Zero, 5f);
+            Maze = new Maze();
+            hud = new HUD();
+            GameState = GameState.Transition;
+        }
+
         public void Update(GameTime gameTime)
         {
-            Input.Update();
-
-            if (GameState == GameState.GameOver || GameState == GameState.Win)
+            if (Instance.IsActive)
             {
-                if (Input.KeyPressed(Keys.Escape, true))
-                    Instance.Exit();
-            }
-            else
-            {
-                hud.Update(gameTime);
+                Input.Update();
 
-                /*if (Input.KeyPressed(Keys.E, true) && !Convertible.IsConversionOn)
+                if (GameState == GameState.GameOver || GameState == GameState.Win)
                 {
-                    EventManager.Instance.Raise(new OnConversionStartEvent() { convertible = enemy1 });
-                    conversionManager.Initialize(enemy1);
+                    if (Input.KeyPressed(Keys.Escape, true))
+                        Instance.Exit();
                 }
-                else if (Input.KeyPressed(Keys.Escape, true) && Convertible.IsConversionOn)
-                    EventManager.Instance.Raise(new OnConversionStopEvent() { convertible = enemy1 });
-                else */if (Input.KeyPressed(Keys.Escape, true))
-                    Instance.Exit();
-
-                // Move only if the player is not currently converting
-                if (!Convertible.IsConversionOn)
-                    Camera.Update(gameTime);
                 else
-                    conversionManager.Update(gameTime);
+                {
+                    hud.Update(gameTime);
+                    Maze.Update(gameTime);
+
+                    /*if (Input.KeyPressed(Keys.E, true) && !Convertible.IsConversionOn)
+                    {
+                        EventManager.Instance.Raise(new OnConversionStartEvent() { convertible = enemy1 });
+                        conversionManager.Initialize(enemy1);
+                    }
+                    else if (Input.KeyPressed(Keys.Escape, true) && Convertible.IsConversionOn)
+                        EventManager.Instance.Raise(new OnConversionStopEvent() { convertible = enemy1 });
+                    else */
+                    if (Input.KeyPressed(Keys.Escape, true))
+                        Instance.Exit();
+
+                    // Move only if the player is not currently converting
+                    if (!Convertible.IsConversionOn)
+                        Camera.Update(gameTime);
+                    else
+                        conversionManager.Update(gameTime);
+
+                    if (GameState == GameState.Transition)
+                        GameState = GameState.Playing;
+                }
             }
         }
 
         public void Draw()
         {
-            if (GameState == GameState.GameOver)
+            if (GameState != GameState.Transition)
             {
-                Device.Clear(Color.Black);
-                Batch.Begin();
-                Batch.DrawString(HUD.Font, "YOU LOSE.", Center - (HUD.Font.MeasureString("YOU LOSE") / 2), Color.DarkRed);
-                Batch.End();
-            }
-            else if (GameState == GameState.Win)
-            {
-                Device.Clear(Color.Black);
-                Batch.Begin();
-                Batch.DrawString(HUD.Font, "YOU WIN !", Center - (HUD.Font.MeasureString("YOU WIN !") / 2), Color.White);
-                Batch.End();
-            }
-            else
-            {
-                Device.Clear(Color.DeepSkyBlue);
-                maze.Draw(Camera, effect);
-                enemy1.Draw(Camera, effect);
-                hud.Draw();
-                if (Convertible.IsConversionOn)
-                    conversionManager.Draw();
+                if (GameState == GameState.GameOver)
+                {
+                    Device.Clear(Color.Black);
+                    Batch.Begin();
+                    Batch.DrawString(HUD.Font, "YOU LOSE.", Center - (HUD.Font.MeasureString("YOU LOSE") / 2), Color.DarkRed);
+                    Batch.End();
+                }
+                else if (GameState == GameState.Win)
+                {
+                    Device.Clear(Color.Black);
+                    Batch.Begin();
+                    Batch.DrawString(HUD.Font, "YOU WIN !", Center - (HUD.Font.MeasureString("YOU WIN !") / 2), Color.White);
+                    Batch.End();
+                }
+                else
+                {
+                    Device.Clear(Color.DeepSkyBlue);
+                    Maze.Draw(Camera, effect);
+                    hud.Draw();
+                    if (Convertible.IsConversionOn)
+                        conversionManager.Draw();
+                }
             }
         }
 
@@ -138,6 +149,17 @@ namespace ConversionFPS
         {
             GameState = GameState.GameOver;
             SoundManager.Play("GameOver");
+        }
+
+        void HandleOnLevelEndEvent(OnLevelEndEvent e)
+        {
+            if (LevelNumber == 1)
+                LoadLevel(2);
+            else
+            {
+                GameState = GameState.Win;
+                SoundManager.Play("Win");
+            }
         }
     }
 }

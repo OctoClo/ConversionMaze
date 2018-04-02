@@ -74,7 +74,10 @@ namespace ConversionFPS
                 moveVector.Normalize();
                 moveVector *= elapsed * cameraSpeed;
                 Vector3 preview = PreviewMove(moveVector);
-                if (preview.X >= 1.1 && preview.X < Maze.Width - 1.1 && preview.Z >= 1.1 && preview.Z < Maze.Height - 1.1)
+                if (Main.Maze.GetCube((int)(preview.X + 0.1), (int)(preview.Z + 0.1)).Type == TileType.End)
+                    EventManager.Instance.Raise(new OnLevelEndEvent());
+                else if (preview.X >= 1.1 && preview.X < Maze.Width - 1.1 && preview.Z >= 1.1 && preview.Z < Maze.Height - 1.1 &&
+                    Main.Maze.GetCube((int)(preview.X + 0.1), (int)(preview.Z + 0.1)).Type != TileType.Wall)
                     Move(moveVector);
             }
 

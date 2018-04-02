@@ -55,6 +55,12 @@ namespace ConversionFPS
             GenerateConversion();
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            if ((int)Main.Camera.Position.X == position.X && (int)Main.Camera.Position.Z == position.Z)
+                EventManager.Instance.Raise(new OnPlayerHitEvent() { Damages = damages });
+        }
+
         public override void Draw(Camera camera, BasicEffect effect, float scale = 1)
         {
             base.Draw(camera, effect, 0.5f);
