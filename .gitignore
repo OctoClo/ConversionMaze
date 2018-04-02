@@ -7,3 +7,5 @@ Properties/
 *.csproj
 *.sln
 *.csproj.user
+
+*.bak_*
