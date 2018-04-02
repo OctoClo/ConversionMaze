@@ -36,9 +36,13 @@ namespace ConversionFPS
 
         public void Draw()
         {
+            Main.Batch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp); // Prevent anti-aliasing in minimap zoom
+
             healthBar.Draw();
             timer.Draw();
             minimap.Draw();
+
+            Main.Batch.End();
         }
     }
 }

@@ -14,7 +14,7 @@ namespace ConversionFPS
 
         int speed, damages;
 
-        public Enemy(Vector3 pos) : base("", pos)
+        public Enemy(Vector3 pos) : base("", pos, TileType.Enemy)
         { }
 
         protected override void Initialize(string texturePath)
@@ -53,6 +53,11 @@ namespace ConversionFPS
             }
 
             GenerateConversion();
+        }
+
+        public override void Draw(Camera camera, BasicEffect effect, float scale = 1)
+        {
+            base.Draw(camera, effect, 0.5f);
         }
 
         protected override void GenerateConversion()

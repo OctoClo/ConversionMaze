@@ -74,7 +74,7 @@ namespace ConversionFPS
                 moveVector.Normalize();
                 moveVector *= elapsed * cameraSpeed;
                 Vector3 preview = PreviewMove(moveVector);
-                if (preview.X >= 0 && preview.X < Maze.Width && preview.Z >= 0 && preview.Z < Maze.Height)
+                if (preview.X >= 1.1 && preview.X < Maze.Width - 1.1 && preview.Z >= 1.1 && preview.Z < Maze.Height - 1.1)
                     Move(moveVector);
             }
 

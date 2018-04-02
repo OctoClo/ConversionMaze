@@ -11,7 +11,7 @@ namespace ConversionFPS
     {
         public bool IsOpen;
 
-        public Door(Vector3 pos) : base("", pos)
+        public Door(Vector3 pos) : base("", pos, TileType.Door)
         {
             IsOpen = false;
         }

@@ -14,18 +14,23 @@ namespace ConversionFPS
         public static int Height;
 
         GraphicsDevice device;
+        Cube[,] maze;
         VertexBuffer floorBuffer;
 
         public Maze()
         {
             device = Main.Device;
-            Width = (int)Minimap.Size.X;
-            Height = (int)Minimap.Size.Y;
+            maze = MazeBuilder.GenerateMaze();
+            Width = MazeBuilder.ElementsPerRow;
+            Height = MazeBuilder.ElementsPerRow;
             BuildFloorBuffer();
         }
 
         public void Draw(Camera camera, BasicEffect effect)
         {
+            Main.Device.BlendState = BlendState.Opaque;
+            Main.Device.DepthStencilState = DepthStencilState.Default;
+
             effect.VertexColorEnabled = true;
             effect.TextureEnabled = false;
 
@@ -39,6 +44,9 @@ namespace ConversionFPS
                 device.SetVertexBuffer(floorBuffer);
                 device.DrawPrimitives(PrimitiveType.TriangleList, 0, floorBuffer.VertexCount / 3);
             }
+
+            foreach (Cube cube in maze)
+                cube.Draw(camera, effect);
         }
 
         void BuildFloorBuffer()

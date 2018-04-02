@@ -67,7 +67,9 @@ namespace ConversionFPS
 
         public void Draw()
         {
+            Main.Batch.Begin();
             Main.Batch.DrawString(HUD.Font, number, Main.Center - (HUD.Font.MeasureString(number) / 2), Color.White);
+            Main.Batch.End();
         }
 
         string GetNumberFromKey(Keys key)
