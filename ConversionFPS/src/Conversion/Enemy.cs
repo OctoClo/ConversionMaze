@@ -14,6 +14,9 @@ namespace ConversionFPS
 
         int speed, damages;
 
+        List<Cube> pathToPlayer;
+        float lastMovementTime;
+
         public Enemy(Vector3 pos) : base("", pos, TileType.Enemy)
         { }
 
@@ -36,6 +39,7 @@ namespace ConversionFPS
 
             speed = level;
             damages = level * 5;
+            lastMovementTime = 999;
 
             switch (level)
             {
@@ -57,8 +61,26 @@ namespace ConversionFPS
 
         public override void Update(GameTime gameTime)
         {
-            if ((int)Main.Camera.Position.X == position.X && (int)Main.Camera.Position.Z == position.Z)
+            if (Main.Maze.IsOnPlayerCube(this))
+            {
                 EventManager.Instance.Raise(new OnPlayerHitEvent() { Damages = damages });
+                position.X = (int)Math.Round(position.X);
+                position.Z = (int)Math.Round(position.Z);
+            }
+
+            else
+            {
+                if (lastMovementTime - Timer.TimeF >= 1)
+                {
+                    position.X = (int)Math.Round(position.X);
+                    position.Z = (int)Math.Round(position.Z);
+                    pathToPlayer = AStar.FindPath(this, Main.Maze.GetPlayerCube());
+                    lastMovementTime = Timer.TimeF;
+                }
+
+                if (pathToPlayer != null && pathToPlayer.Count > 0)
+                    position = Vector3.Lerp(position, pathToPlayer[0].Position, 0.1f);
+            }
         }
 
         public override void Draw(Camera camera, BasicEffect effect, float scale = 1)

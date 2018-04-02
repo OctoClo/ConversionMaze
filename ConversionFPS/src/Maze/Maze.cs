@@ -26,18 +26,55 @@ namespace ConversionFPS
             maze = MazeBuilder.GenerateMaze();
             Width = MazeBuilder.ElementsPerRow;
             Height = MazeBuilder.ElementsPerRow;
-            convertibles = new Convertible[5];
-            convertibles[0] = new Enemy(new Vector3(3, 0, 3));
-            convertibles[1] = new Enemy(new Vector3(1, 0, 3));
-            convertibles[2] = new Enemy(new Vector3(3, 0, 1));
-            convertibles[3] = new Enemy(new Vector3(15, 0, 21));
-            convertibles[4] = new Enemy(new Vector3(3, 0, 17));
+            convertibles = new Convertible[1];
+            convertibles[0] = new Enemy(new Vector3(5, 0, 1));
             BuildFloorBuffer();
+        }
+
+        public bool IsOnPlayerCube(Cube cube)
+        {
+            Cube playerCube = GetPlayerCube();
+            return (playerCube.Position.X == (int)Math.Round(cube.Position.X) &&
+                    playerCube.Position.Z == (int)Math.Round(cube.Position.Z));
+        }
+
+        public Cube GetPlayerCube()
+        {
+            return GetCube((int)Main.Camera.Position.X, (int)Main.Camera.Position.Z);
         }
 
         public Cube GetCube(int x, int y)
         {
             return maze[y, x];
+        }
+
+        public List<Cube> GetAdjacentCubes(Cube cube)
+        {
+            List<Cube> neighbours = new List<Cube>();
+            int x = (int)cube.Position.X;
+            int y = (int)cube.Position.Z;
+
+            if (x > 0 && maze[y, x - 1].Type != TileType.Wall)
+                neighbours.Add(maze[y, x - 1]);
+            if (y > 0 && maze[y - 1, x].Type != TileType.Wall)
+                neighbours.Add(maze[y - 1, x]);
+            if (x < MazeBuilder.ElementsPerRow - 1 && maze[y, x + 1].Type != TileType.Wall)
+                neighbours.Add(maze[y, x + 1]);
+            if (y < MazeBuilder.ElementsPerRow - 1 && maze[y + 1, x].Type != TileType.Wall)
+                neighbours.Add(maze[y + 1, x]);
+
+            return neighbours;
+        }
+
+        public int GetDistance(Cube cube1, Cube cube2)
+        {
+            int xDistance = (int)cube1.Position.X - (int)cube2.Position.X;
+            int zDistance = (int)cube1.Position.Z - (int)cube2.Position.Z;
+            if (xDistance < 0)
+                xDistance *= -1;
+            if (zDistance < 0)
+                zDistance *= -1;
+            return (xDistance + zDistance);
         }
 
         public void Update(GameTime gameTime)

@@ -23,8 +23,7 @@ namespace ConversionFPS
             rowSize = (ElementsPerRow + 2) * ElementSize;
             TextureMinimap = new Texture2D(Main.Device, rowSize, rowSize);
 
-            Random rand = new Random();
-            int randVal = rand.Next(1, 3);
+            int randVal = Main.Rand.Next(1, 3);
             string filePath = "../../../../Content/Labyrinths/" + difficulty + randVal + ".txt";
 
             LoadFile(filePath);

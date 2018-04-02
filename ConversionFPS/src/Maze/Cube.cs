@@ -14,6 +14,11 @@ namespace ConversionFPS
     {
         public TileType Type;
 
+        public Vector3 Position
+        {
+            get { return position; }
+        }
+
         protected Vector3 position;
         protected Texture2D texture;
 
