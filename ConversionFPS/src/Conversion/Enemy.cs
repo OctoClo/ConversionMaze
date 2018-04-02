@@ -55,6 +55,11 @@ namespace ConversionFPS
             GenerateConversion();
         }
 
+        public override void Draw(Camera camera, BasicEffect effect, float scale = 1)
+        {
+            base.Draw(camera, effect, 0.5f);
+        }
+
         protected override void GenerateConversion()
         {
             int start = Main.Rand.Next(16, 256);

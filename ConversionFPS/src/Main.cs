@@ -32,8 +32,7 @@ namespace ConversionFPS
         BasicEffect effect;
         Maze maze;
 
-        /*Enemy enemy1, enemy2;
-        Door door;*/
+        Enemy enemy1;
 
         public Main(Game1 game, GraphicsDeviceManager graphics)
         {
@@ -63,9 +62,7 @@ namespace ConversionFPS
             effect = new BasicEffect(Device);
             maze = new Maze();
 
-            /*enemy1 = new Enemy(new Vector3(3, 0, 3));
-            enemy2 = new Enemy(new Vector3(4, 0, 4));
-            door = new Door(new Vector3(10, 0, 10));*/
+            enemy1 = new Enemy(new Vector3(3, 0, 3));
         }
 
         public void Initialize()
@@ -130,7 +127,7 @@ namespace ConversionFPS
             {
                 Device.Clear(Color.DeepSkyBlue);
                 maze.Draw(Camera, effect);
-                //enemy1.Draw(Camera, effect);
+                enemy1.Draw(Camera, effect);
                 hud.Draw();
                 if (Convertible.IsConversionOn)
                     conversionManager.Draw();

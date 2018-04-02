@@ -43,9 +43,9 @@ namespace ConversionFPS
 
         protected abstract void HandleSuccess();
 
-        public override void Draw(Camera camera, BasicEffect effect)
+        public override void Draw(Camera camera, BasicEffect effect, float scale = 1)
         {
-            base.Draw(camera, effect);
+            base.Draw(camera, effect, scale);
             /*Main.Batch.Begin();
             string display = "Start (" + (int)startBase + ") : " + startValue + " - End (" + (int)endBase + ") : " + endValue; 
             Main.Batch.DrawString(HUD.FontTiny, display, new Vector2(Main.Center.X - (HUD.Font.MeasureString("YOU WIN !").X / 2),

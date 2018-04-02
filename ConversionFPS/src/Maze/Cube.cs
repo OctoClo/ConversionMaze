@@ -52,7 +52,7 @@ namespace ConversionFPS
             
         }
 
-        public virtual void Draw(Camera camera, BasicEffect effect)
+        public virtual void Draw(Camera camera, BasicEffect effect, float scaleCube = 1)
         {
             if (texture != null)
             {
@@ -60,12 +60,15 @@ namespace ConversionFPS
                 effect.TextureEnabled = true;
                 effect.Texture = texture;
 
-                Matrix scale = Matrix.CreateScale(1);
+                Matrix center = Matrix.Identity;
+                if (scaleCube != 1)
+                    center = Matrix.CreateTranslation(scaleCube, scaleCube, scaleCube);
+                Matrix scale = Matrix.CreateScale(scaleCube);
                 Matrix translate = Matrix.CreateTranslation(position);
 
                 effect.View = camera.View;
                 effect.Projection = camera.Projection;
-                effect.World = scale * translate;
+                effect.World = center * scale * translate;
 
                 foreach (EffectPass pass in effect.CurrentTechnique.Passes)
                 {
