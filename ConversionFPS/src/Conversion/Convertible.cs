@@ -23,7 +23,7 @@ namespace ConversionFPS
         protected string startValue, endValue;
         protected Base startBase, endBase;
 
-        public Convertible(string texturePath, Vector3 pos) : base(texturePath, pos)
+        public Convertible(string texturePath, Vector3 pos, TileType type) : base(texturePath, pos, type)
         {
             EventManager.Instance.AddListener<OnConversionStartEvent>(HandleConversionStartEvent);
             EventManager.Instance.AddListener<OnConversionStopEvent>(HandleConversionStopEvent);

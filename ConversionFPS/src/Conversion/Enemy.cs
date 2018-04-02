@@ -14,7 +14,7 @@ namespace ConversionFPS
 
         int speed, damages;
 
-        public Enemy(Vector3 pos) : base("", pos)
+        public Enemy(Vector3 pos) : base("", pos, TileType.Enemy)
         { }
 
         protected override void Initialize(string texturePath)

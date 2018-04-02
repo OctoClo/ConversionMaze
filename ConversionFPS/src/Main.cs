@@ -32,10 +32,8 @@ namespace ConversionFPS
         BasicEffect effect;
         Maze maze;
 
-        Enemy enemy1, enemy2;
-        Door door;
-
-        public static Map map1;
+        /*Enemy enemy1, enemy2;
+        Door door;*/
 
         public Main(Game1 game, GraphicsDeviceManager graphics)
         {
@@ -54,20 +52,20 @@ namespace ConversionFPS
 
             conversionManager = new ConversionManager();
             EventManager.Instance.AddListener<OnGameOverEvent>(HandleGameOverEvent);
-            map1 = new Map(1);
+            MazeBuilder.Initialize(1);
 
             SoundManager.AddEffect("Win", "YouWin");
             SoundManager.AddEffect("GameOver", "YouLose");
 
-            Camera = new Camera(new Vector3(0, 0.8f, 0), Vector3.Zero, 5f);
+            Camera = new Camera(new Vector3(1.2f, 0.8f, 1.2f), Vector3.Zero, 5f);
             hud = new HUD();
 
             effect = new BasicEffect(Device);
             maze = new Maze();
 
-            enemy1 = new Enemy(new Vector3(3, 0, 3));
+            /*enemy1 = new Enemy(new Vector3(3, 0, 3));
             enemy2 = new Enemy(new Vector3(4, 0, 4));
-            door = new Door(new Vector3(10, 0, 10));
+            door = new Door(new Vector3(10, 0, 10));*/
         }
 
         public void Initialize()
@@ -94,14 +92,14 @@ namespace ConversionFPS
             {
                 hud.Update(gameTime);
 
-                if (Input.KeyPressed(Keys.E, true) && !Convertible.IsConversionOn)
+                /*if (Input.KeyPressed(Keys.E, true) && !Convertible.IsConversionOn)
                 {
                     EventManager.Instance.Raise(new OnConversionStartEvent() { convertible = enemy1 });
                     conversionManager.Initialize(enemy1);
                 }
                 else if (Input.KeyPressed(Keys.Escape, true) && Convertible.IsConversionOn)
                     EventManager.Instance.Raise(new OnConversionStopEvent() { convertible = enemy1 });
-                else if (Input.KeyPressed(Keys.Escape, true))
+                else */if (Input.KeyPressed(Keys.Escape, true))
                     Instance.Exit();
 
                 // Move only if the player is not currently converting
