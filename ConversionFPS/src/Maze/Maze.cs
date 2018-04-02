@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ConversionFPS
 {
+    class OnLevelEndEvent : GameEvent { }
+
     class Maze
     {
         public static int Width;

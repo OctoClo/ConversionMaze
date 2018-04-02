@@ -25,6 +25,10 @@ namespace ConversionFPS
             slowDown = 1;
             timePosition = new Vector2((Main.Width / 2) - (HUD.Font.MeasureString("2:22").X / 2), 50);
             levelPosition = new Vector2((Main.Width / 2) - (HUD.FontTiny.MeasureString("level 2").X / 2), 15);
+
+            level = "level " + Main.LevelNumber;
+            timer = minutes + ":" + seconds;
+
             EventManager.Instance.AddListener<OnConversionStartEvent>(HandleConversionStartEvent);
             EventManager.Instance.AddListener<OnConversionStopEvent>(HandleConversionStopEvent);
         }

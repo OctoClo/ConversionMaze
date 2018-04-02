@@ -31,6 +31,7 @@ namespace ConversionFPS
             spriteForeground = new Sprite("HUD/HealthBar_Foreground", position);
 
             textPos = new Vector2(position.X + 100, position.Y + 8);    // Position of the text inside the bar
+            text = "" + _health;
 
             EventManager.Instance.AddListener<OnPlayerHitEvent>(HandleOnPlayerHitEvent);
         }
