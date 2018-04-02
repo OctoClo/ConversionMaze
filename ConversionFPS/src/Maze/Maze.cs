@@ -15,13 +15,12 @@ namespace ConversionFPS
         public static int Width;
         public static int Height;
 
+        public List<Convertible> Convertibles { get { return convertibles; } }
+
         GraphicsDevice device;
         Cube[,] maze;
         List<Convertible> convertibles;
         VertexBuffer floorBuffer;
-
-        // List of convertibles present on the map (enemies, doors...) 
-        public List<Convertible> convertibleElements;
 
         public Maze()
         {
@@ -32,14 +31,6 @@ namespace ConversionFPS
 
             SpawnEnemies();
             BuildFloorBuffer();
-            convertibleElements = new List<Convertible>();
-            convertibleElements.Add(new Enemy(new Vector3(5, 0, 3)));
-            convertibleElements.Add(new Enemy(new Vector3(5, 0, 8)));
-        }
-
-        public Cube GetCube(int x, int y)
-        {
-            return maze[y, x];
         }
 
         public bool IsOnPlayerCube(Cube cube)
@@ -173,22 +164,22 @@ namespace ConversionFPS
         public static bool IsInFront(Convertible c, Camera cam) { return ( IsVisibleUnder(c, cam) || IsVisibleOver(c, cam) || IsVisibleRight(c, cam) || IsVisibleLeft(c, cam) ); }
 
         // Check if Convertible in same row
-        private static bool IsInSameRow(Convertible c, Camera cam) { return (c.position.Y == (int)cam.Position.Z); }
+        private static bool IsInSameRow(Convertible c, Camera cam) { return ((int)c.Position.Z == (int)cam.Position.Z); }
 
         // Check if Convertible in same column
-        private static bool IsInSameColumn(Convertible c, Camera cam) { return (c.position.X == (int)cam.Position.X); }
+        private static bool IsInSameColumn(Convertible c, Camera cam) { return ((int)c.Position.X == (int)cam.Position.X); }
 
         // Check if Convertible Y value is greater than camera's
-        private static bool IsUnderCam(Convertible c, Camera cam) { return (IsInSameColumn(c, cam) && c.position.Y >= cam.Position.Z); }
+        private static bool IsUnderCam(Convertible c, Camera cam) { return (IsInSameColumn(c, cam) && (int)c.Position.Z >= cam.Position.Z); }
 
         // Check if Convertible Y value is lower than camera's
-        private static bool IsOverCam(Convertible c, Camera cam) { return (IsInSameColumn(c, cam) && c.position.Y <= cam.Position.Z); }
+        private static bool IsOverCam(Convertible c, Camera cam) { return (IsInSameColumn(c, cam) && (int)c.Position.Z <= cam.Position.Z); }
 
         // Check if Convertible X value is greater than camera's
-        private static bool IsRightOfCam(Convertible c, Camera cam) { return (IsInSameRow(c, cam) && c.position.X >= cam.Position.X); }
+        private static bool IsRightOfCam(Convertible c, Camera cam) { return (IsInSameRow(c, cam) && (int)c.Position.X >= cam.Position.X); }
 
         // Check if Convertible X value is lower than camera's
-        private static bool IsLeftOfCam(Convertible c, Camera cam) { return (IsInSameRow(c, cam) && c.position.X <= cam.Position.X); }
+        private static bool IsLeftOfCam(Convertible c, Camera cam) { return (IsInSameRow(c, cam) && (int)c.Position.X <= cam.Position.X); }
 
         // Check if Convertible is visible under the cam
         private static bool IsVisibleUnder(Convertible c, Camera cam) { return (IsUnderCam(c, cam) && (MathHelper.ToDegrees(cam.Rotation.Y) > -45) && (MathHelper.ToDegrees(cam.Rotation.Y) < 45)); }
@@ -210,8 +201,8 @@ namespace ConversionFPS
             int x1, y1, x2, y2;
             x1 = (int)cam.Position.X;
             y1 = (int)cam.Position.Z;
-            x2 = (int)c.position.X;
-            y2 = (int)c.position.Y;
+            x2 = (int)c.Position.X;
+            y2 = (int)c.Position.Z;
 
             if (IsInSameRow(c, cam))
             {
