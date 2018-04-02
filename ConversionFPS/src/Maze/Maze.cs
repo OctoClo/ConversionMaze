@@ -20,6 +20,9 @@ namespace ConversionFPS
         List<Convertible> convertibles;
         VertexBuffer floorBuffer;
 
+        // List of convertibles present on the map (enemies, doors...) 
+        public List<Convertible> convertibleElements;
+
         public Maze()
         {
             device = Main.Device;
@@ -29,6 +32,14 @@ namespace ConversionFPS
 
             SpawnEnemies();
             BuildFloorBuffer();
+            convertibleElements = new List<Convertible>();
+            convertibleElements.Add(new Enemy(new Vector3(5, 0, 3)));
+            convertibleElements.Add(new Enemy(new Vector3(5, 0, 8)));
+        }
+
+        public Cube GetCube(int x, int y)
+        {
+            return maze[y, x];
         }
 
         public bool IsOnPlayerCube(Cube cube)
@@ -155,5 +166,94 @@ namespace ConversionFPS
             };
             return vertexList;
         }
+
+        // *** Functions to check Convertible presence in field of view ***
+
+        // Check if Convertible is in front of the camera
+        public static bool IsInFront(Convertible c, Camera cam) { return ( IsVisibleUnder(c, cam) || IsVisibleOver(c, cam) || IsVisibleRight(c, cam) || IsVisibleLeft(c, cam) ); }
+
+        // Check if Convertible in same row
+        private static bool IsInSameRow(Convertible c, Camera cam) { return (c.position.Y == (int)cam.Position.Z); }
+
+        // Check if Convertible in same column
+        private static bool IsInSameColumn(Convertible c, Camera cam) { return (c.position.X == (int)cam.Position.X); }
+
+        // Check if Convertible Y value is greater than camera's
+        private static bool IsUnderCam(Convertible c, Camera cam) { return (IsInSameColumn(c, cam) && c.position.Y >= cam.Position.Z); }
+
+        // Check if Convertible Y value is lower than camera's
+        private static bool IsOverCam(Convertible c, Camera cam) { return (IsInSameColumn(c, cam) && c.position.Y <= cam.Position.Z); }
+
+        // Check if Convertible X value is greater than camera's
+        private static bool IsRightOfCam(Convertible c, Camera cam) { return (IsInSameRow(c, cam) && c.position.X >= cam.Position.X); }
+
+        // Check if Convertible X value is lower than camera's
+        private static bool IsLeftOfCam(Convertible c, Camera cam) { return (IsInSameRow(c, cam) && c.position.X <= cam.Position.X); }
+
+        // Check if Convertible is visible under the cam
+        private static bool IsVisibleUnder(Convertible c, Camera cam) { return (IsUnderCam(c, cam) && (MathHelper.ToDegrees(cam.Rotation.Y) > -45) && (MathHelper.ToDegrees(cam.Rotation.Y) < 45)); }
+
+        // Check if Convertible is visible over the cam
+        private static bool IsVisibleOver(Convertible c, Camera cam) { return (IsOverCam(c, cam) && (MathHelper.ToDegrees(cam.Rotation.Y) > 135) || (MathHelper.ToDegrees(cam.Rotation.Y) < -135)); }
+
+        // Check if Convertible is visible at the right of the cam
+        private static bool IsVisibleRight(Convertible c, Camera cam) { return (IsRightOfCam(c, cam) && (MathHelper.ToDegrees(cam.Rotation.Y) > 45) && (MathHelper.ToDegrees(cam.Rotation.Y) < 135)); }
+
+        // Check if Convertible is visible at the left of the cam
+        private static bool IsVisibleLeft(Convertible c, Camera cam) { return (IsLeftOfCam(c, cam) && (MathHelper.ToDegrees(cam.Rotation.Y) > -135) && (MathHelper.ToDegrees(cam.Rotation.Y) < -45)); }
+
+        
+        // Function to check if path is free of any wall
+        public static bool IsPathClear(Convertible c, Camera cam, Maze maze)
+        {
+            bool result = true;
+            int x1, y1, x2, y2;
+            x1 = (int)cam.Position.X;
+            y1 = (int)cam.Position.Z;
+            x2 = (int)c.position.X;
+            y2 = (int)c.position.Y;
+
+            if (IsInSameRow(c, cam))
+            {
+                if ( x1 <= x2)
+                {
+                    while (result && x1 != x2)
+                    {
+                        x1++;
+                        result = !(maze.GetCube(x1, y1).Type == TileType.Wall);
+                    }
+                }
+                else
+                {
+                    while (result && x1 != x2)
+                    {
+                        x2++;
+                        result = !(maze.GetCube(x2, y2).Type == TileType.Wall);
+                    }
+                }
+            }
+            else
+            {
+                if (x1 <= x2)
+                {
+                    while (result && y1 != y2)
+                    {
+                        y1++;
+                        result = !(maze.GetCube(x1, y1).Type == TileType.Wall);
+                    }
+                }
+                else
+                {
+                    while (result && y1 != y2)
+                    {
+                        y2++;
+                        result = !(maze.GetCube(x2, y2).Type == TileType.Wall);
+                    }
+                }
+            }
+            
+            return result;
+        }
+    
     }
 }
