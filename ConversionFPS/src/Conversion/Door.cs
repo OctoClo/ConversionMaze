@@ -13,7 +13,7 @@ namespace ConversionFPS
 
         public Door(Vector3 pos) : base("", pos, TileType.Door)
         {
-            IsOpen = false;
+            IsOpen = true;
         }
 
         protected override void Initialize(string texturePath)
