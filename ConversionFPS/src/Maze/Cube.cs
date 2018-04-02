@@ -14,7 +14,7 @@ namespace ConversionFPS
     {
         public TileType Type;
 
-        protected Vector3 position;
+        public Vector3 position;
         protected Texture2D texture;
 
         GraphicsDevice device;

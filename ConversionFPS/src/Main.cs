@@ -2,6 +2,9 @@
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace ConversionFPS
 {
@@ -31,8 +34,8 @@ namespace ConversionFPS
 
         BasicEffect effect;
         Maze maze;
-
-        Enemy enemy1;
+        
+        Convertible closestConvertible; // Convertible targeted by the conversion 
 
         public Main(Game1 game, GraphicsDeviceManager graphics)
         {
@@ -61,8 +64,6 @@ namespace ConversionFPS
 
             effect = new BasicEffect(Device);
             maze = new Maze();
-
-            enemy1 = new Enemy(new Vector3(3, 0, 3));
         }
 
         public void Initialize()
@@ -89,14 +90,43 @@ namespace ConversionFPS
             {
                 hud.Update(gameTime);
 
-                /*if (Input.KeyPressed(Keys.E, true) && !Convertible.IsConversionOn)
+                if (Input.KeyPressed(Keys.E, true) && !Convertible.IsConversionOn)
                 {
-                    EventManager.Instance.Raise(new OnConversionStartEvent() { convertible = enemy1 });
-                    conversionManager.Initialize(enemy1);
+                    closestConvertible = null;
+                    double minDist = 9999 ;
+
+                    // Find the closest Convertibles in the front of the camera 
+                    foreach (Convertible c in maze.convertibleElements)
+                    {
+
+                        if ( Maze.IsInFront(c, Camera) )
+                        {
+                            // Check if the distance is less than the previous minimum
+                            double distance = Math.Sqrt((double)(Math.Pow(c.position.X - Camera.Position.X, 2) + Math.Pow(c.position.Y - Camera.Position.Z, 2)));
+                            if (distance < minDist)
+                            {
+                                // Check if said convertible is visible by the camera
+                                if (Maze.IsPathClear(c, Camera, maze))
+                                {
+                                    minDist = distance;
+                                    closestConvertible = c;
+                                }
+                            }
+                        }
+                    }
+
+                    if (closestConvertible != null) Debug.Print("Closest : " + closestConvertible.position.X + ";" + closestConvertible.position.Y);
+                    else Debug.Print("null");
+                    
+                    if (closestConvertible != null)
+                    {
+                        EventManager.Instance.Raise(new OnConversionStartEvent() { convertible = closestConvertible });
+                        conversionManager.Initialize(closestConvertible);
+                    }
                 }
                 else if (Input.KeyPressed(Keys.Escape, true) && Convertible.IsConversionOn)
-                    EventManager.Instance.Raise(new OnConversionStopEvent() { convertible = enemy1 });
-                else */if (Input.KeyPressed(Keys.Escape, true))
+                    EventManager.Instance.Raise(new OnConversionStopEvent() { convertible = closestConvertible });
+                else if (Input.KeyPressed(Keys.Escape, true))
                     Instance.Exit();
 
                 // Move only if the player is not currently converting
@@ -127,7 +157,8 @@ namespace ConversionFPS
             {
                 Device.Clear(Color.DeepSkyBlue);
                 maze.Draw(Camera, effect);
-                enemy1.Draw(Camera, effect);
+                foreach(Convertible c in maze.convertibleElements)
+                    c.Draw(Camera, effect);
                 hud.Draw();
                 if (Convertible.IsConversionOn)
                     conversionManager.Draw();
