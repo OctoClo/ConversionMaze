@@ -44,8 +44,6 @@ namespace ConversionFPS
                         maze[i, j] = new Cube("Wall", new Vector3(j, 0, i), type);
                     else if (type == TileType.Door)
                         maze[i, j] = new Door(new Vector3(j, 0, i));
-                    else if (type == TileType.Enemy)
-                        maze[i, j] = new Enemy(new Vector3(j, 0, i));
                     else
                         maze[i, j] = new Cube("", new Vector3(j, 0, i), type);
                 }
@@ -138,8 +136,11 @@ namespace ConversionFPS
                     break;
 
                 case TileType.Path:
-                case TileType.Spawn:
                     color = Color.Transparent;
+                    break;
+
+                case TileType.Spawn:
+                    color = Color.Blue;
                     break;
 
                 case TileType.Begin:

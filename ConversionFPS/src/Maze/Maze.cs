@@ -17,17 +17,17 @@ namespace ConversionFPS
 
         GraphicsDevice device;
         Cube[,] maze;
-        Convertible[] convertibles;
+        List<Convertible> convertibles;
         VertexBuffer floorBuffer;
 
         public Maze()
         {
             device = Main.Device;
-            maze = MazeBuilder.GenerateMaze();
             Width = MazeBuilder.ElementsPerRow;
             Height = MazeBuilder.ElementsPerRow;
-            convertibles = new Convertible[1];
-            convertibles[0] = new Enemy(new Vector3(5, 0, 1));
+            maze = MazeBuilder.GenerateMaze();
+
+            SpawnEnemies();
             BuildFloorBuffer();
         }
 
@@ -107,6 +107,17 @@ namespace ConversionFPS
 
             foreach (Convertible conv in convertibles)
                 conv.Draw(camera, effect);
+        }
+
+        void SpawnEnemies()
+        {
+            convertibles = new List<Convertible>();
+
+            foreach (Cube cube in maze)
+            {
+                if (cube.Type == TileType.Spawn)
+                    convertibles.Add(new Enemy(cube.Position));
+            }
         }
 
         void BuildFloorBuffer()
